@@ -8,21 +8,23 @@
 #include <memory>
 #include <string>
 #include <glad/glad.h>
+#include "directdrawtexture.h"
 #include "linmath.h"
+#include "renderobject.h"
 #include "shaderprogram.h"
 #include "util.h"
 
-class Cube {
+class Cube : public RenderObject {
 public:
     Cube(void) { }
     virtual ~Cube(void) { }
     static std::unique_ptr<Cube> Create(void);
     static void Destroy(Cube* tri);
     void draw(void);
-    void update(double elapsed);
+    void update(double elapsed, mat4x4 view, mat4x4 proj);
 private:
     std::unique_ptr<ShaderProgram> m_program;
-    std::unique_ptr<util::DDSTexture> m_texture;
+    std::unique_ptr<DirectDrawTexture> m_texture;
 
     GLint m_color_attrib;
     GLint m_uv_attrib;

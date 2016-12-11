@@ -137,9 +137,9 @@ Cube::Create(void)
         0.667979f, 1.0f-0.335851f
     };
 
-    box->m_texture = std::unique_ptr<util::DDSTexture>(
-        new util::DDSTexture("textures/uvtemplate.dds"));
-    if (!box->m_texture->ready()) {
+    box->m_texture = std::unique_ptr<DirectDrawTexture>(
+        new DirectDrawTexture("textures/uvtemplate.dds"));
+    if (!box->m_texture->isValid()) {
 #ifdef RENDERER_DEBUG
         std::cerr << "Failed to load texture uvtemplate.dds" << std::endl;
 #endif
@@ -152,19 +152,22 @@ Cube::Create(void)
     GLenum format;
 
     unsigned int bsize;
-    switch (box->m_texture->getFormat()) {
-    case util::DDSTexture::DXT1:
+    std::string strformat = box->m_texture->getTextureType();
+    if (strformat.compare("DirectDrawSurface_DXT1") == 0) {
         format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
         bsize = 8;
-        break;
-    case util::DDSTexture::DXT3:
+    } else if (strformat.compare("DirectDrawSurface_DXT3") == 0) {
         format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
         bsize = 16;
-        break;
-    case util::DDSTexture::DXT5:
+    } else if (strformat.compare("DirectDrawSurface_DXT5") == 0) {
         format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
         bsize = 16;
-        break;
+    } else {
+#ifdef RENDERER_DEBUG
+        std::cerr << "Unrecognized compression format for DirectDrawTexture.";
+        std::cerr << std::endl;
+#endif
+        return nullptr;
     }
 
     unsigned int offset = 0;
@@ -175,7 +178,7 @@ Cube::Create(void)
     for (unsigned int level = 0; level < mmc && (width || height); level++) {
         size_t size = ((width + 3) / 4) * ((height + 3) / 4) * bsize;
         glCompressedTexImage2D(GL_TEXTURE_2D, level, format, width, height,
-            0, size, box->m_texture->getData().data() + offset);
+            0, size, box->m_texture->getPixelData().data() + offset);
 
         offset += size;
         width /= 2;
@@ -245,7 +248,7 @@ Cube::draw(void)
 }
 
 void
-Cube::update(double elapsed)
+Cube::update(double elapsed, mat4x4 view, mat4x4 proj)
 {
 
 }

@@ -6,6 +6,7 @@ LDFLAGS=-lmingw32 -lglfw3 -lopengl32 -mconsole
 RM=rm -rf
 OBJS=\
 	cube.o \
+	directdrawtexture.o \
 	glad.o \
 	main.o \
 	shaderprogram.o \
@@ -19,6 +20,9 @@ $(TARGET): $(OBJS)
 
 cube.o: cube.cpp cube.h
 	$(CXX) $(CXXFLAGS) cube.cpp -o cube.o
+
+directdrawtexture.o: directdrawtexture.cpp directdrawtexture.h
+	$(CXX) $(CXXFLAGS) directdrawtexture.cpp -o directdrawtexture.o
 
 glad.o: glad.c
 	$(CXX) $(CXXFLAGS) glad.c -o glad.o
