@@ -2,9 +2,12 @@
 #define WINDOW_H
 
 #include <memory>
+#include <sstream>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#define DEFAULT_WINDOW_TITLE    ("Renderer")
 
 class Window {
 public:

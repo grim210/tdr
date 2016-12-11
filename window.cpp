@@ -21,7 +21,7 @@ Window::Initialize(int w, int h, bool fs)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_DOUBLEBUFFER, 1);
     win->m_window = glfwCreateWindow(win->m_width, win->m_height,
-        "Test", NULL, NULL);
+        DEFAULT_WINDOW_TITLE, nullptr, nullptr);
     if (win->m_window == NULL) {
         return nullptr;
     }
@@ -29,6 +29,10 @@ Window::Initialize(int w, int h, bool fs)
     glfwMakeContextCurrent(win->m_window);
     glfwSwapInterval(1);
     gladLoadGL();
+
+    std::stringstream title;
+    title << DEFAULT_WINDOW_TITLE << " -- OpenGL " << glGetString(GL_VERSION);
+    glfwSetWindowTitle(win->m_window, title.str().c_str());
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
