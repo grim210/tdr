@@ -1,9 +1,9 @@
-#include "programmanager.h"
+#include "shaderprogram.h"
 
-std::unique_ptr<ProgramManager>
-ProgramManager::Create(void)
+std::unique_ptr<ShaderProgram>
+ShaderProgram::Create(void)
 {
-    std::unique_ptr<ProgramManager> pm(new ProgramManager());
+    std::unique_ptr<ShaderProgram> pm(new ShaderProgram());
 
     pm->m_linked = false;
     pm->m_id = glCreateProgram();
@@ -16,7 +16,7 @@ ProgramManager::Create(void)
 }
 
 void
-ProgramManager::Destroy(ProgramManager* pm)
+ShaderProgram::Destroy(ShaderProgram* pm)
 {
     pm->m_linked = false;
 
@@ -28,7 +28,7 @@ ProgramManager::Destroy(ProgramManager* pm)
 }
 
 bool
-ProgramManager::attachShader(GLenum type, std::string source)
+ShaderProgram::attachShader(GLenum type, std::string source)
 {
     if (source.length() < 1) {
         return false;
@@ -59,7 +59,7 @@ ProgramManager::attachShader(GLenum type, std::string source)
 }
 
 GLuint
-ProgramManager::getProgram(void)
+ShaderProgram::getProgram(void)
 {
     bool result;
 
@@ -74,7 +74,7 @@ ProgramManager::getProgram(void)
 }
 
 bool
-ProgramManager::link(void)
+ShaderProgram::link(void)
 {
     GLint result;
 

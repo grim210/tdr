@@ -3,7 +3,7 @@
 #include <string>
 
 #include <glad/glad.h>
-#include "triangle.h"
+#include "cube.h"
 #include "window.h"
 
 int main(int argc, char* argv[])
@@ -15,16 +15,16 @@ int main(int argc, char* argv[])
     }
     window->setClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
-    std::unique_ptr<Triangle> tri = Triangle::Create();
+    std::unique_ptr<Cube> cube = Cube::Create();
 
     bool running = true;
     while (running) {
         window->clear();
-        tri->draw();
+        cube->draw();
         running = window->swap();
     }
 
-    Triangle::Destroy(tri.get());
+    Cube::Destroy(cube.get());
     Window::Destroy(window.get());
     return 0;
 }

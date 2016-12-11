@@ -5,10 +5,10 @@ LD=g++
 LDFLAGS=-lmingw32 -lglfw3 -lopengl32 -mconsole
 RM=rm -rf
 OBJS=\
+	cube.o \
 	glad.o \
 	main.o \
-	programmanager.o \
-	triangle.o \
+	shaderprogram.o \
 	util.o \
 	window.o
 
@@ -17,17 +17,17 @@ all: $(TARGET)
 $(TARGET): $(OBJS)
 	$(LD) $(OBJS) -o $(TARGET) $(LDFLAGS)
 
+cube.o: cube.cpp cube.h
+	$(CXX) $(CXXFLAGS) cube.cpp -o cube.o
+
 glad.o: glad.c
 	$(CXX) $(CXXFLAGS) glad.c -o glad.o
 
 main.o: main.cpp
 	$(CXX) $(CXXFLAGS) main.cpp -o main.o
 
-programmanager.o: programmanager.cpp programmanager.h
-	$(CXX) $(CXXFLAGS) programmanager.cpp -o programmanager.o
-
-triangle.o: triangle.cpp triangle.h
-	$(CXX) $(CXXFLAGS) triangle.cpp -o triangle.o
+shaderprogram.o: shaderprogram.cpp shaderprogram.h
+	$(CXX) $(CXXFLAGS) shaderprogram.cpp -o shaderprogram.o
 
 util.o: util.cpp util.h
 	$(CXX) $(CXXFLAGS) util.cpp -o util.o

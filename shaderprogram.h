@@ -11,10 +11,10 @@
 
 #include <glad/glad.h>
 
-class ProgramManager {
+class ShaderProgram {
 public:
-    static std::unique_ptr<ProgramManager> Create(void);
-    static void Destroy(ProgramManager* pm);
+    static std::unique_ptr<ShaderProgram> Create(void);
+    static void Destroy(ShaderProgram* pm);
     bool attachShader(GLenum type, std::string source);
     GLuint getProgram(void);
     bool link(void);

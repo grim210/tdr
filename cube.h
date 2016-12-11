@@ -1,5 +1,5 @@
-#ifndef RENDERER_TRIANGLE
-#define RENDERER_TRIANGLE
+#ifndef RENDERER_CUBE_H
+#define RENDERER_CUBE_H
 
 #ifdef RENDERER_DEBUG
 #include <iostream>
@@ -9,21 +9,24 @@
 #include <string>
 #include <glad/glad.h>
 #include "linmath.h"
-#include "programmanager.h"
+#include "shaderprogram.h"
 #include "util.h"
 
-class Triangle {
+class Cube {
 public:
-    Triangle(void) { }
-    virtual ~Triangle(void) { }
-    static std::unique_ptr<Triangle> Create(void);
-    static void Destroy(Triangle* tri);
+    Cube(void) { }
+    virtual ~Cube(void) { }
+    static std::unique_ptr<Cube> Create(void);
+    static void Destroy(Cube* tri);
     void draw(void);
     void update(double elapsed);
 private:
-    std::unique_ptr<ProgramManager> m_program;
+    std::unique_ptr<ShaderProgram> m_program;
+    GLint m_color_attrib;
     GLint m_vpos_attrib;
     GLint m_mvp_uniform;
+
+    GLuint m_cbuff;
     GLuint m_vbuff;
 
     mat4x4 m_proj;
@@ -32,4 +35,4 @@ private:
     mat4x4 m_mvp;
 };
 
-#endif /* RENDERER_TRIANGLE */
+#endif /* RENDERER_CUBE_H */

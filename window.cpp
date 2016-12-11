@@ -30,6 +30,9 @@ Window::Initialize(int w, int h, bool fs)
     glfwSwapInterval(1);
     gladLoadGL();
 
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
     return win;
 }
 
