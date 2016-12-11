@@ -1,8 +1,17 @@
 #version 120
 
-varying vec3 fragmentColor;
+varying vec2 UV;
+uniform sampler2D myTextureSampler;
 
 void main(void)
 {
-    gl_FragColor = vec4(fragmentColor, 1);
+    /* texture flipping: */
+    vec2 temp;
+    temp.x = UV.x;
+    temp.y = 1.0 - UV.y;
+    gl_FragColor = texture2D(myTextureSampler, temp);
+
+    /* No texture flipping:
+    gl_FragColor = texture2D(myTextureSampler, UV);
+    */
 }

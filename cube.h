@@ -22,12 +22,18 @@ public:
     void update(double elapsed);
 private:
     std::unique_ptr<ShaderProgram> m_program;
-    GLint m_color_attrib;
-    GLint m_vpos_attrib;
-    GLint m_mvp_uniform;
+    std::unique_ptr<util::DDSTexture> m_texture;
 
-    GLuint m_cbuff;
+    GLint m_color_attrib;
+    GLint m_uv_attrib;
+    GLint m_vpos_attrib;
+
+    GLint m_mvp_uniform;
+    GLint m_tex_uniform;
+
+    GLuint m_uvbuff;
     GLuint m_vbuff;
+    GLuint m_tex;
 
     mat4x4 m_proj;
     mat4x4 m_view;

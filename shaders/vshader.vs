@@ -1,13 +1,13 @@
 #version 120
 
 attribute vec3 vertexPosition_modelspace;
-attribute vec3 vertexColor;
+attribute vec2 vertexUV;
 
-varying vec3 fragmentColor;
+varying vec2 UV;
 uniform mat4 MVP;
 
 void main(void)
 {
     gl_Position = MVP * vec4(vertexPosition_modelspace, 1);
-    fragmentColor = vertexColor;
+    UV = vertexUV;
 }
