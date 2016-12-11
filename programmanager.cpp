@@ -4,6 +4,7 @@ std::unique_ptr<ProgramManager>
 ProgramManager::Create(void)
 {
     std::unique_ptr<ProgramManager> pm(new ProgramManager());
+
     pm->m_linked = false;
     pm->m_id = glCreateProgram();
 
@@ -55,4 +56,46 @@ ProgramManager::attachShader(GLenum type, std::string source)
 
     m_shaders.push_back(sh);
     return true;
+}
+
+GLuint
+ProgramManager::getProgram(void)
+{
+    bool result;
+
+    if (!m_linked) {
+        result = this->link();
+        if (!result) {
+            return 0;
+        }
+    }
+
+    return m_id;
+}
+
+bool
+ProgramManager::link(void)
+{
+    GLint result;
+
+    if (m_linked) {
+        return true;
+    }
+
+    for (size_t i = 0; i < m_shaders.size(); i++) {
+#ifdef RENDERER_DEBUG
+        std::cout << "Attaching shader[" << i << "]" << std::endl;
+#endif
+        glAttachShader(m_id, m_shaders[i].id);
+    }
+
+    glLinkProgram(m_id);
+    glGetProgramiv(m_id, GL_LINK_STATUS, &result);
+    if (result == GL_FALSE) {
+        m_linked = false;
+    } else {
+        m_linked = true;
+    }
+
+    return m_linked;
 }

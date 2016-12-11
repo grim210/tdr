@@ -1,6 +1,10 @@
 #ifndef PROGRAMMANAGER_H
 #define PROGRAMMANAGER_H
 
+#ifdef RENDERER_DEBUG
+#include <iostream>
+#endif
+
 #include <memory>
 #include <string>
 #include <vector>

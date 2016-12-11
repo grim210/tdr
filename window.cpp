@@ -47,3 +47,9 @@ Window::swap(void)
 
     return (!glfwWindowShouldClose(m_window));
 }
+
+void
+Window::setClearColor(float r, float g, float b, float a)
+{
+    glClearColor(r, g, b, a);
+}
