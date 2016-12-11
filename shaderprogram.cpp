@@ -83,9 +83,6 @@ ShaderProgram::link(void)
     }
 
     for (size_t i = 0; i < m_shaders.size(); i++) {
-#ifdef RENDERER_DEBUG
-        std::cout << "Attaching shader[" << i << "]" << std::endl;
-#endif
         glAttachShader(m_id, m_shaders[i].id);
     }
 
