@@ -1,3 +1,9 @@
+test
+
+# Ignore 'Makefile', track the system specific ones in the source tree
+Makefile
+
+# Normal trash files
 *exe
 *dll
 *o
