@@ -8,6 +8,7 @@ OBJS=\
 	cube.o \
 	directdrawtexture.o \
 	glad.o \
+	gltexture.o \
 	main.o \
 	shaderprogram.o \
 	util.o \
@@ -26,6 +27,9 @@ directdrawtexture.o: directdrawtexture.cpp directdrawtexture.h
 
 glad.o: glad.c
 	$(CXX) $(CXXFLAGS) glad.c -o glad.o
+
+gltexture.o: gltexture.cpp gltexture.h
+	$(CXX) $(CXXFLAGS) gltexture.cpp -o gltexture.o
 
 main.o: main.cpp
 	$(CXX) $(CXXFLAGS) main.cpp -o main.o
