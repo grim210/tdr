@@ -1,7 +1,7 @@
 #include "cube.h"
 
 std::unique_ptr<Cube>
-Cube::Create(void)
+Cube::Create(std::shared_ptr<Texture> tex)
 {
     std::unique_ptr<Cube> box(new Cube());
     box->m_program = ShaderProgram::Create();
@@ -137,60 +137,12 @@ Cube::Create(void)
         0.667979f, 1.0f-0.335851f
     };
 
-    box->m_texture = std::unique_ptr<DirectDrawTexture>(
-        new DirectDrawTexture("textures/uvtemplate.dds"));
+    box->m_texture = std::shared_ptr<GLTexture>(GLTexture::Create(tex));
     if (!box->m_texture->isValid()) {
 #ifdef RENDERER_DEBUG
-        std::cerr << "Failed to load texture uvtemplate.dds" << std::endl;
+        std::cerr << "Failed to create OpenGL texture." << std::endl;
 #endif
         return nullptr;
-    }
-
-    glGenTextures(1, &box->m_tex);
-    glBindTexture(GL_TEXTURE_2D, box->m_tex);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    GLenum format;
-
-    unsigned int bsize;
-    std::string strformat = box->m_texture->getTextureType();
-    if (strformat.compare("DirectDrawSurface_DXT1") == 0) {
-        format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
-        bsize = 8;
-    } else if (strformat.compare("DirectDrawSurface_DXT3") == 0) {
-        format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
-        bsize = 16;
-    } else if (strformat.compare("DirectDrawSurface_DXT5") == 0) {
-        format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
-        bsize = 16;
-    } else {
-#ifdef RENDERER_DEBUG
-        std::cerr << "Unrecognized compression format for DirectDrawTexture.";
-        std::cerr << std::endl;
-#endif
-        return nullptr;
-    }
-
-    unsigned int offset = 0;
-    unsigned int mmc = box->m_texture->getMipMapCount();
-    unsigned int width = box->m_texture->getWidth();
-    unsigned int height = box->m_texture->getHeight();
-
-    for (unsigned int level = 0; level < mmc && (width || height); level++) {
-        size_t size = ((width + 3) / 4) * ((height + 3) / 4) * bsize;
-        glCompressedTexImage2D(GL_TEXTURE_2D, level, format, width, height,
-            0, size, box->m_texture->getPixelData().data() + offset);
-
-        offset += size;
-        width /= 2;
-        height /= 2;
-
-        if (width < 1) {
-            width = 1;
-        }
-
-        if (height < 1) {
-            height = 1;
-        }
     }
 
     glGenBuffers(1, &box->m_vbuff);
@@ -231,7 +183,7 @@ Cube::draw(void)
     glUniformMatrix4fv(m_mvp_uniform, 1, GL_FALSE, (GLfloat*)m_mvp);
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m_tex);
+    glBindTexture(GL_TEXTURE_2D, m_texture->getID());
     glUniform1i(m_tex_uniform, 0);
 
     glEnableVertexAttribArray(m_vpos_attrib);

@@ -4,6 +4,7 @@
 
 #include <glad/glad.h>
 #include "cube.h"
+#include "directdrawtexture.h"
 #include "window.h"
 
 int main(int argc, char* argv[])
@@ -15,7 +16,9 @@ int main(int argc, char* argv[])
     }
     window->setClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
-    std::unique_ptr<Cube> cube = Cube::Create();
+    std::shared_ptr<DirectDrawTexture> ddtex(
+        new DirectDrawTexture("textures/uvtemplate.dds"));
+    std::unique_ptr<Cube> cube = Cube::Create(ddtex);
 
     bool running = true;
     while (running) {
