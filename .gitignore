@@ -1,7 +1,9 @@
-test
+# the executables
+renderer
+renderer.exe
 
 # Ignore 'Makefile', track the system specific ones in the source tree
-Makefile
+src/Makefile
 
 # Normal trash files
 *exe
