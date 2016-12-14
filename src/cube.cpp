@@ -2,7 +2,7 @@
 
 std::shared_ptr<Cube> Cube::Create(std::shared_ptr<Texture> tex)
 {
-    std::unique_ptr<Cube> box(new Cube());
+    std::shared_ptr<Cube> box(new Cube());
     box->m_program = ShaderProgram::Create();
 
     std::string vshader = util::load_text_file("./shaders/vshader.vs");
@@ -160,15 +160,13 @@ std::shared_ptr<Cube> Cube::Create(std::shared_ptr<Texture> tex)
     return box;
 }
 
-void
-Cube::Destroy(Cube* box)
+void Cube::Destroy(Cube* box)
 {
     glDeleteBuffers(1, &box->m_vbuff);
     ShaderProgram::Destroy(box->m_program.get());
 }
 
-void
-Cube::draw(void)
+void Cube::draw(void)
 {
     glUseProgram(m_program->getProgram());
     glUniformMatrix4fv(m_mvp_uniform, 1, GL_FALSE, glm::value_ptr(m_mvp));
@@ -205,8 +203,7 @@ bool Cube::translate(glm::vec3 offset)
     m_model = glm::translate(m_model, offset);
 }
 
-void
-Cube::update(double elapsed, glm::mat4 view, glm::mat4 proj)
+void Cube::update(double elapsed, glm::mat4 view, glm::mat4 proj)
 {
     m_mvp = proj * view * m_model;
 }
