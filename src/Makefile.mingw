@@ -1,6 +1,6 @@
 TARGET=renderer
 CXX=g++
-CXXFLAGS=-c -std=c++11 -I../include/ -DRENDERER_DEBUG
+CXXFLAGS=-c -std=c++11 -Wall -Werror -I../include/ -DRENDERER_DEBUG
 LD=g++
 LDFLAGS=-lmingw32 -lglfw3 -lopengl32 -mconsole
 RM=rm -rf
