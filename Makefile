@@ -1,8 +1,8 @@
 all:
-	cd src; make
+	cd renderer; make
 
 clean:
-	cd src; make clean
+	cd renderer; make clean
 
 distclean:
-	cd src; make distclean
+	cd renderer; make distclean
