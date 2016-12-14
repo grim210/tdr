@@ -23,14 +23,15 @@ class Cube : public RenderObject {
 public:
     Cube(void) { }
     virtual ~Cube(void) { }
-    static std::unique_ptr<Cube> Create(std::shared_ptr<Texture> tex);
+    static std::shared_ptr<Cube> Create(std::shared_ptr<Texture> tex);
     static void Destroy(Cube* tri);
     void draw(void);
     glm::vec3 getPosition(void);
+    bool setPosition(glm::vec3 location);
+    bool translate(glm::vec3 destination);
     void update(double elapsed, glm::mat4 view, glm::mat4 proj);
 private:
     std::unique_ptr<ShaderProgram> m_program;
-    //std::unique_ptr<DirectDrawTexture> m_texture;
     std::shared_ptr<GLTexture> m_texture;
 
     GLint m_color_attrib;
@@ -44,8 +45,7 @@ private:
     GLuint m_vbuff;
     GLuint m_tex;
 
-    glm::mat4 m_proj;
-    glm::mat4 m_view;
+    glm::vec3 m_pos;
     glm::mat4 m_model;
     glm::mat4 m_mvp;
 };

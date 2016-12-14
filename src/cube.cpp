@@ -1,6 +1,6 @@
 #include <cube.h>
 
-std::unique_ptr<Cube> Cube::Create(std::shared_ptr<Texture> tex)
+std::shared_ptr<Cube> Cube::Create(std::shared_ptr<Texture> tex)
 {
     std::unique_ptr<Cube> box(new Cube());
     box->m_program = ShaderProgram::Create();
@@ -154,14 +154,8 @@ std::unique_ptr<Cube> Cube::Create(std::shared_ptr<Texture> tex)
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data),
         g_uv_buffer_data, GL_STATIC_DRAW);
 
-    glm::vec3 eye(4.0f, 3.0f, -3.0f);
-    glm::vec3 center(0.0f, 0.0f, 0.0f);
-    glm::vec3 up(0.0f, 1.0f, 0.0f);
-
-    box->m_view = glm::lookAt(eye, center, up);
-    box->m_proj = glm::perspective(45.0f, 800.0f / 600.0f, 0.1f, 100.0f);
-    box->m_model = glm::mat4(1.0f);
-    box->m_mvp = box->m_proj * box->m_view * box->m_model;
+    box->m_pos = glm::vec3(0.0f, 0.0f, 0.0f);
+    box->m_model = glm::translate(glm::mat4(1.0f), box->m_pos);
 
     return box;
 }
@@ -198,17 +192,21 @@ Cube::draw(void)
 
 glm::vec3 Cube::getPosition(void)
 {
-    /*
-    std::shared_ptr<vec3> pos = make_shared<vec3>();
-    pos[0] = 0.0f;
-    pos[1] = 0.0f;
-    pos[2] = 0.0f;
-    */
     return glm::vec3(0.0f, 0.0f, 0.0f);
+}
+
+bool Cube::setPosition(glm::vec3 destination)
+{
+    m_model = glm::translate(glm::mat4(1.0f), destination);
+}
+
+bool Cube::translate(glm::vec3 offset)
+{
+    m_model = glm::translate(m_model, offset);
 }
 
 void
 Cube::update(double elapsed, glm::mat4 view, glm::mat4 proj)
 {
-
+    m_mvp = proj * view * m_model;
 }
