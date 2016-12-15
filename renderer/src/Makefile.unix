@@ -1,33 +1,23 @@
-TARGET=renderer
+TARGET=librenderer.a
 CXX=g++
-CXXFLAGS=-c -std=c++11 -Wall -Werror -I../include/ -DRENDERER_DEBUG
-LD=g++
-LDFLAGS=-lglfw -lgl -ldl
+CXXFLAGS=-c -std=c++11 -Wall -Werror -I../include/ -I../../main/include/ -DRENDERER_DEBUG
+AR=ar
+ARFLAGS=rcs
 RM=rm -rf
 OBJS=\
-	camera.o \
 	cube.o \
-	directdrawtexture.o \
 	glad.o \
 	gltexture.o \
-	main.o \
 	shaderprogram.o \
-	util.o \
 	window.o
 
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(LD) $(OBJS) -o $(TARGET) $(LDFLAGS)
-
-camera.o: camera.cpp
-	$(CXX) $(CXXFLAGS) camera.cpp -o camera.o
+	$(AR) $(ARFLAGS) $(TARGET) $(OBJS)
 
 cube.o: cube.cpp
 	$(CXX) $(CXXFLAGS) cube.cpp -o cube.o
-
-directdrawtexture.o: directdrawtexture.cpp 
-	$(CXX) $(CXXFLAGS) directdrawtexture.cpp -o directdrawtexture.o
 
 glad.o: glad.c
 	$(CXX) $(CXXFLAGS) glad.c -o glad.o
@@ -35,14 +25,8 @@ glad.o: glad.c
 gltexture.o: gltexture.cpp
 	$(CXX) $(CXXFLAGS) gltexture.cpp -o gltexture.o
 
-main.o: main.cpp
-	$(CXX) $(CXXFLAGS) main.cpp -o main.o
-
 shaderprogram.o: shaderprogram.cpp
 	$(CXX) $(CXXFLAGS) shaderprogram.cpp -o shaderprogram.o
-
-util.o: util.cpp
-	$(CXX) $(CXXFLAGS) util.cpp -o util.o
 
 window.o: window.cpp
 	$(CXX) $(CXXFLAGS) window.cpp -o window.o
