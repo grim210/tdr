@@ -1,0 +1,54 @@
+TARGET=renderer
+CXX=g++
+CXXFLAGS=-c -std=c++11 -Wall -Werror -I../include/ -DRENDERER_DEBUG
+LD=g++
+LDFLAGS=-lmingw32 -lglfw3 -lopengl32 -mconsole
+RM=rm -rf
+OBJS=\
+	camera.o \
+	cube.o \
+	directdrawtexture.o \
+	glad.o \
+	gltexture.o \
+	main.o \
+	shaderprogram.o \
+	util.o \
+	window.o
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(LD) $(OBJS) -o $(TARGET) $(LDFLAGS)
+
+camera.o: camera.cpp
+	$(CXX) $(CXXFLAGS) camera.cpp -o camera.o
+
+cube.o: cube.cpp
+	$(CXX) $(CXXFLAGS) cube.cpp -o cube.o
+
+directdrawtexture.o: directdrawtexture.cpp 
+	$(CXX) $(CXXFLAGS) directdrawtexture.cpp -o directdrawtexture.o
+
+glad.o: glad.c
+	$(CXX) $(CXXFLAGS) glad.c -o glad.o
+
+gltexture.o: gltexture.cpp
+	$(CXX) $(CXXFLAGS) gltexture.cpp -o gltexture.o
+
+main.o: main.cpp
+	$(CXX) $(CXXFLAGS) main.cpp -o main.o
+
+shaderprogram.o: shaderprogram.cpp
+	$(CXX) $(CXXFLAGS) shaderprogram.cpp -o shaderprogram.o
+
+util.o: util.cpp
+	$(CXX) $(CXXFLAGS) util.cpp -o util.o
+
+window.o: window.cpp
+	$(CXX) $(CXXFLAGS) window.cpp -o window.o
+
+clean:
+	$(RM) $(OBJS)
+
+distclean:
+	$(RM) $(OBJS) $(TARGET)

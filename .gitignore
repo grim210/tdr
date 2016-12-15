@@ -1,9 +1,10 @@
 # the executables
-renderer
-renderer.exe
+libmain.a
+librenderer.a
+test
+test.exe
 
 # Ignore 'Makefile', track the system specific ones in the source tree
-src/Makefile
 
 # Normal trash files
 *exe

@@ -1,0 +1,38 @@
+TARGET=librenderer.a
+CXX=g++
+CXXFLAGS=-c -std=c++11 -Wall -Werror -I../include/ -I../../main/include -DRENDERER_DEBUG
+AR=ar
+ARFLAGS=rcs
+RM=rm -rf
+OBJS=\
+	cube.o \
+	glad.o \
+	gltexture.o \
+	shaderprogram.o \
+	window.o
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(AR) $(ARFLAGS) $(TARGET) $(OBJS)
+
+cube.o: cube.cpp
+	$(CXX) $(CXXFLAGS) cube.cpp -o cube.o
+
+glad.o: glad.c
+	$(CXX) $(CXXFLAGS) glad.c -o glad.o
+
+gltexture.o: gltexture.cpp
+	$(CXX) $(CXXFLAGS) gltexture.cpp -o gltexture.o
+
+shaderprogram.o: shaderprogram.cpp
+	$(CXX) $(CXXFLAGS) shaderprogram.cpp -o shaderprogram.o
+
+window.o: window.cpp
+	$(CXX) $(CXXFLAGS) window.cpp -o window.o
+
+clean:
+	$(RM) $(OBJS)
+
+distclean:
+	$(RM) $(OBJS) $(TARGET)
