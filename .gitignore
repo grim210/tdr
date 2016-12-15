@@ -5,6 +5,10 @@ test
 test.exe
 
 # Ignore 'Makefile', track the system specific ones in the source tree
+Makefile
+#./main/src/Makefile
+#./renderer/src/Makefile
+#./test/Makefile
 
 # Normal trash files
 *exe
