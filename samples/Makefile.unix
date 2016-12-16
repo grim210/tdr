@@ -1,0 +1,23 @@
+TARGET=test
+CXX=g++
+CXXINC=-I../renderer/include/ -I../main/include/
+CXXFLAGS=-c -std=c++11 -Wall -Werror $(CXXINC)
+LD=g++
+LDINC=-L../renderer/src/ -L../main/src/
+LDFLAGS=-lrenderer -lmain -lglfw -lGL -ldl $(LDINC)
+RM=rm -rf
+OBJS=	main.o
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(LD) $(OBJS) -o $(TARGET) $(LDFLAGS)
+
+main.o: main.cpp
+	$(CXX) $(CXXFLAGS) main.cpp -o main.o
+
+clean:
+	$(RM) $(OBJS)
+
+distclean:
+	$(RM) $(OBJS) $(TARGET)
