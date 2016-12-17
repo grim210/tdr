@@ -15,4 +15,8 @@ namespace util {
 std::string load_text_file(std::string path);
 }
 
+extern "C" {
+const char* tdrmain_version(void);
+}
+
 #endif /* RENDERER_UTIL_H */

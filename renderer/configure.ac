@@ -1,4 +1,4 @@
-AC_INIT([renderer], [0.1], [joe.brown@gitlab.com])
+AC_INIT([tdrrenderer], [0.1], [joe.brown@gitlab.com])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AM_PROG_AR
 AC_PROG_CXX

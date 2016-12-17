@@ -22,4 +22,8 @@ private:
     GLuint m_id;
 };
 
+extern "C" {
+    const char* get_renderer_version(void);
+}
+
 #endif /* RENDERER_GLTEXTURE_H */
