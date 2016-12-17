@@ -4,11 +4,22 @@ librenderer.a
 test
 test.exe
 
+# Ignore autotools files
+aclocal.m4
+ar-lib
+autom4te.cache
+compile
+config.h.in
+configure
+depcomp
+install-sh
+missing
+Makefile.in
+config.log
+config.status
+
 # Ignore 'Makefile', track the system specific ones in the source tree
 Makefile
-#./main/src/Makefile
-#./renderer/src/Makefile
-#./test/Makefile
 
 # Normal trash files
 *exe
