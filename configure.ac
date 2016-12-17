@@ -1,5 +1,5 @@
 AC_PREREQ([2.62])
-AC_INIT([tdr-projects], [0.2])
+AC_INIT([tdr-projects], [1.0])
 AC_CANONICAL_SYSTEM
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 LT_PREREQ([2.2])

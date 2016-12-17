@@ -1,17 +1,17 @@
 # the executables
-libmain.a
+libtdrmain.a
 librenderer.a
-test
-test.exe
 
 # Ignore autotools files
 aclocal.m4
 ar-lib
 autom4te.cache
+autoscan.log
 compile
 config.h
 config.h.in
 config.guess
+configure.scan
 config.sub
 configure
 depcomp
