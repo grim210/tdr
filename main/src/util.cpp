@@ -1,7 +1,6 @@
 #include <util.h>
 
-std::string
-util::load_text_file(std::string path)
+std::string util::load_text_file(std::string path)
 {
     std::fstream fs(path, std::ifstream::in);
     if (!fs.is_open()) {
