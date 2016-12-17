@@ -8,5 +8,6 @@ $RM $M4_GARBAGE
 
 $RM $DELSTRING
 cd ./main && $RM $DELSTRING && cd ..
+cd ./main/src/ && $RM $DELSTRING && cd ../..
 cd ./renderer && $RM $DELSTRING && cd ..
 cd ./samples && $RM $DELSTRING && cd ..
