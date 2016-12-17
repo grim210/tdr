@@ -9,12 +9,14 @@ aclocal.m4
 ar-lib
 autom4te.cache
 compile
+config.h
 config.h.in
 configure
 depcomp
 install-sh
 missing
 Makefile.in
+stamp-h1
 config.log
 config.status
 
