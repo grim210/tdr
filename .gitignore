@@ -1,14 +1,10 @@
 # the executables
-libmain.a
-librenderer.a
-test
-test.exe
+libtdrmain.a
+libtdrrenderer.a
+sample_*
 
-# Ignore 'Makefile', track the system specific ones in the source tree
-Makefile
-#./main/src/Makefile
-#./renderer/src/Makefile
-#./test/Makefile
+# ignore the build directory; a by-product of CMake
+build
 
 # Normal trash files
 *exe

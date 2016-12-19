@@ -14,10 +14,10 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <gltexture.h>
+#include <mainutil.h>
 #include <renderobject.h>
 #include <shaderprogram.h>
 #include <texture.h>
-#include <util.h>
 
 class Cube : public RenderObject {
 public:

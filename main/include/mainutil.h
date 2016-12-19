@@ -1,5 +1,5 @@
-#ifndef RENDERER_UTIL_H
-#define RENDERER_UTIL_H
+#ifndef RENDERER_MAINUTIL_H
+#define RENDERER_MAINUTIL_H
 
 #ifdef RENDERER_DEBUG
 #include <iostream>
@@ -11,8 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace util {
 std::string load_text_file(std::string path);
-}
+const char* tdrmain_version(void);
 
-#endif /* RENDERER_UTIL_H */
+#endif /* RENDERER_MAINUTIL_H */
