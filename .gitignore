@@ -1,38 +1,10 @@
 # the executables
 libtdrmain.a
 libtdrrenderer.a
+sample_*
 
-# Ignore autotools files
-aclocal.m4
-ar-lib
-autom4te.cache
-autoscan.log
-compile
-config.h
-config.h.in
-config.guess
-configure.scan
-config.sub
-configure
-depcomp
-install-sh
-libtool
-ltmain.sh
-missing
-Makefile.in
-stamp-h1
-config.log
-config.status
-
-# Ignore macro trash
-m4/libtool.m4
-m4/ltoptions.m4
-m4/ltsugar.m4
-m4/ltversion.m4
-m4/lt~obsolete.m4
-
-# Ignore 'Makefile', track the system specific ones in the source tree
-Makefile
+# ignore the build directory; a by-product of CMake
+build
 
 # Normal trash files
 *exe

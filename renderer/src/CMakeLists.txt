@@ -1,0 +1,9 @@
+include_directories("${tdrmain_SOURCE_DIR}/include/")
+include_directories("${tdrrenderer_SOURCE_DIR}/include")
+add_library(tdrrenderer
+    cube.cpp
+    glad.cpp
+    gltexture.cpp
+    rendererutil.cpp
+    shaderprogram.cpp
+    window.cpp)

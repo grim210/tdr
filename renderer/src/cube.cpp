@@ -5,8 +5,8 @@ std::shared_ptr<Cube> Cube::Create(std::shared_ptr<Texture> tex)
     std::shared_ptr<Cube> box(new Cube());
     box->m_program = ShaderProgram::Create();
 
-    std::string vshader = util::load_text_file("./shaders/vshader.vs");
-    std::string fshader = util::load_text_file("./shaders/fshader.fs");
+    std::string vshader = load_text_file("./shaders/vshader.vs");
+    std::string fshader = load_text_file("./shaders/fshader.fs");
 
     if (!box->m_program->attachShader(GL_VERTEX_SHADER, vshader)) {
 #ifdef RENDERER_DEBUG
