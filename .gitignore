@@ -1,6 +1,6 @@
 # the executables
 libtdrmain.a
-librenderer.a
+libtdrrenderer.a
 
 # Ignore autotools files
 aclocal.m4

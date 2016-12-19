@@ -1,5 +1,5 @@
-#ifndef RENDERER_UTIL_H
-#define RENDERER_UTIL_H
+#ifndef RENDERER_MAINUTIL_H
+#define RENDERER_MAINUTIL_H
 
 #ifdef RENDERER_DEBUG
 #include <iostream>
@@ -19,4 +19,4 @@ extern "C" {
 const char* tdrmain_version(void);
 }
 
-#endif /* RENDERER_UTIL_H */
+#endif /* RENDERER_MAINUTIL_H */
