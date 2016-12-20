@@ -10,7 +10,3 @@ endif()
 
 # Add the tdrmain directory
 subdirs(main renderer samples)
-
-#add_subdirectory(main)
-#add_subdirectory(renderer)
-#add_subdirectory(samples)
