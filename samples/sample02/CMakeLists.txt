@@ -6,8 +6,16 @@ link_directories("${tdrmain_SOURCE_DIR}/src")
 link_directories("${tdrrenderer_SOURCE_DIR}/src")
 
 add_executable(sample_02 sample02.cpp)
-target_include_directories(sample_02 PUBLIC ${GLFW3_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR})
-target_link_libraries(sample_02 tdrrenderer tdrmain ${GLFW3_LIBRARY} ${OPENGL_gl_LIBRARY} ${CMAKE_DL_LIBS})
+target_include_directories(sample_02 PUBLIC
+    ${GLFW3_INCLUDE_DIR}
+    ${OPENGL_INCLUDE_DIR}
+)
+
+target_link_libraries(sample_02 tdrrenderer tdrmain
+    ${OPENGL_gl_LIBRARY}
+    ${GLFW3_LIBRARIES}
+    ${CMAKE_DL_LIBS}
+)
 
 file(COPY shaders DESTINATION .)
 file(COPY textures DESTINATION .)
