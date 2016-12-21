@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.0)
 project(tdr CXX)
 
+set(tdr_VERSION_MAJOR 0)
+set(tdr_VERSION_MINOR 0)
+set(tdr_VERSION_PATCH 1)
+
 message("System: ${CMAKE_SYSTEM_NAME}")
 
 # Check for C++11 compiler
