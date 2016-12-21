@@ -12,7 +12,7 @@ target_include_directories(sample_02 PUBLIC
 )
 
 target_link_libraries(sample_02 tdrrenderer tdrmain
-    ${GLFW3_LIBRARIES}
+    ${GLFW3_LIBRARY}
     ${OPENGL_gl_LIBRARY}
     ${CMAKE_DL_LIBS}
 )
