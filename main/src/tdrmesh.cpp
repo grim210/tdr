@@ -97,3 +97,22 @@ std::shared_ptr<TDRMesh> TDRMesh::Load(const char* buff, size_t len)
 
 	return mesh;
 }
+
+std::vector<float> TDRMesh::get(TDRMesh::Data type)
+{
+    switch (type) {
+    case TDRMesh::Color:
+        return m_colordata;
+        break;
+    case TDRMesh::Index:
+        return m_indexdata;
+        break;
+    case TDRMesh::UV:
+        return m_uvdata;
+        break;
+    case TDRMesh::Vertex:
+        return m_vertexdata;
+        break;
+    }
+}
+
