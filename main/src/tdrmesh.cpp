@@ -1,13 +1,13 @@
-#include <j3dmesh.h>
+#include <tdrmesh.h>
 
-void J3DMesh::Delete(std::shared_ptr<J3DMesh> mesh)
+void TDRMesh::Delete(std::shared_ptr<TDRMesh> mesh)
 {
 	delete(mesh.get());
 }
 
-std::shared_ptr<J3DMesh> J3DMesh::Load(const char* buff, size_t len)
+std::shared_ptr<TDRMesh> TDRMesh::Load(const char* buff, size_t len)
 {
-	std::shared_ptr<J3DMesh> mesh(new J3DMesh());
+	std::shared_ptr<TDRMesh> mesh(new TDRMesh());
 
     static const float g_vertex_buffer_data[] = {
         -1.0f, -1.0f, -1.0f,
