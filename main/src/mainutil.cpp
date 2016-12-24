@@ -1,4 +1,4 @@
-#include <mainutil.h>
+#include <tdrmain.h>
 
 std::string load_text_file(std::string path)
 {

@@ -1,43 +1,66 @@
-#include <fstream>
 #include <iostream>
-#include <string>
+#include <tdrmain.h>
+#include <rendererutil.h>
 
-#include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-
-#include <camera.h>
-#include <cube.h>
-#include <directdrawtexture.h>
-#include <window.h>
+#define BUFF_LEN        (256)
 
 int main(int argc, char* argv[])
 {
-    std::unique_ptr<Window> window = Window::Initialize(800, 600, false);
-    if (window == nullptr) {
-        std::cerr << "nullptr returned.  Aborting." << std::endl;
-        return -1;
-    }
-    window->setClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+    std::cout << "Main: " << tdrmain_version() << std::endl;
+    std::cout << "Renderer: " << tdrrenderer_version() << std::endl;
 
-    std::shared_ptr<DirectDrawTexture> ddtex(
-        new DirectDrawTexture("textures/uvtemplate.dds"));
-    std::shared_ptr<Cube> cube = Cube::Create(ddtex);
-    std::shared_ptr<Camera> camera = Camera::Create(cube);
-
-    glm::mat4 proj = glm::perspective(45.0f, 800.0f / 600.0f, 0.1f, 100.0f);
-
-    bool running = true;
-    while (running) {
-        double elapsed = glfwGetTime();
-
-        cube->update(elapsed, camera->getView(), proj);
-        window->clear();
-        cube->draw();
-        running = window->swap();
+    std::string json = load_text_file("./cube.json");
+    if (json.length() < 1) {
+        return EXIT_FAILURE;
     }
 
-    Cube::Destroy(cube.get());
-    Window::Destroy(window.get());
+    std::cout << "JSON:" << std::endl << json << std::endl;
+
+    jsmn_parser parser;
+    jsmn_init(&parser);
+    int count = jsmn_parse(&parser, json.c_str(), json.length(),
+        nullptr, 0);
+
+    std::vector<jsmntok_t> tokens;
+    tokens.resize(count);
+    std::cout << "Resizing to " << count << " JSON tokens." << std::endl;
+
+    jsmn_init(&parser);
+    int result = jsmn_parse(&parser, json.c_str(), json.length(), tokens.data(),
+        tokens.size());
+    std::cout << result << " JSON tokens successfully parsed." << std::endl;
+
+    char buff[BUFF_LEN];
+    for (size_t i = 0; i < tokens.size(); i++) {
+        int len;
+        memset(buff, 0, BUFF_LEN);
+        std::cout << "Object [" << i << "] is ";
+        len = tokens[i].end - tokens[i].start + 1;
+        std::string temp;
+        float val;
+
+        switch (tokens[i].type) {
+        case JSMN_OBJECT:
+            std::cout << "an object.  Skipping." << std::endl;
+            break;
+        case JSMN_ARRAY:
+            std::cout << "an array." << std::endl;
+            break;
+        case JSMN_STRING:
+            snprintf(buff, len, json.c_str() + tokens[i].start);
+            std::cout << "a string: " << buff << std::endl;
+            break;
+        case JSMN_PRIMITIVE:
+            snprintf(buff, len, json.c_str() + tokens[i].start);
+            temp = buff;
+            val = std::atof(temp.c_str());
+            std::cout << "a primitive: " << val << std::endl;
+            break;
+        default:
+            std::cout << "UNDEFINED.  ABORTING!" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+
     return 0;
 }

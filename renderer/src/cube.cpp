@@ -89,7 +89,8 @@ std::shared_ptr<Cube> Cube::Create(std::shared_ptr<Texture> tex)
 void Cube::Destroy(Cube* box)
 {
     glDeleteBuffers(1, &box->m_vbuff);
-    ShaderProgram::Destroy(box->m_program.get());
+    glDeleteBuffers(1, &box->m_uvbuff);
+    ShaderProgram::Destroy(box->m_program);
 }
 
 void Cube::draw(void)

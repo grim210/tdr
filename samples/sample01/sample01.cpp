@@ -1,5 +1,5 @@
 #include <iostream>
-#include <mainutil.h>
+#include <tdrmain.h>
 #include <rendererutil.h>
 
 int main(int argc, char* argv[])

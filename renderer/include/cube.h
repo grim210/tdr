@@ -14,11 +14,8 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <gltexture.h>
-#include <mainutil.h>
-#include <renderobject.h>
 #include <shaderprogram.h>
-#include <tdrmesh.h>
-#include <texture.h>
+#include <tdrmain.h>
 
 class Cube : public RenderObject {
 public:
@@ -32,7 +29,7 @@ public:
     bool translate(glm::vec3 destination);
     void update(double elapsed, glm::mat4 view, glm::mat4 proj);
 private:
-    std::unique_ptr<ShaderProgram> m_program;
+    std::shared_ptr<ShaderProgram> m_program;
     std::shared_ptr<GLTexture> m_texture;
     std::shared_ptr<TDRMesh> m_mesh;
 

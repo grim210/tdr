@@ -1,7 +1,6 @@
 #include <shaderprogram.h>
 
-std::unique_ptr<ShaderProgram>
-ShaderProgram::Create(void)
+std::shared_ptr<ShaderProgram> ShaderProgram::Create(void)
 {
     std::unique_ptr<ShaderProgram> pm(new ShaderProgram());
 
@@ -15,8 +14,7 @@ ShaderProgram::Create(void)
     return pm;
 }
 
-void
-ShaderProgram::Destroy(ShaderProgram* pm)
+void ShaderProgram::Destroy(std::shared_ptr<ShaderProgram> pm)
 {
     pm->m_linked = false;
 

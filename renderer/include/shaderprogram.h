@@ -13,8 +13,8 @@
 
 class ShaderProgram {
 public:
-    static std::unique_ptr<ShaderProgram> Create(void);
-    static void Destroy(ShaderProgram* pm);
+    static std::shared_ptr<ShaderProgram> Create(void);
+    static void Destroy(std::shared_ptr<ShaderProgram> pm);
     bool attachShader(GLenum type, std::string source);
     GLuint getProgram(void);
     bool link(void);
