@@ -1,17 +1,17 @@
-project(sample_03 CXX)
+project(sample_04 CXX)
 
 include_directories("${tdrmain_SOURCE_DIR}/include/")
 include_directories("${tdrrenderer_SOURCE_DIR}/include/")
 link_directories("${tdrmain_SOURCE_DIR}/src")
 link_directories("${tdrrenderer_SOURCE_DIR}/src")
 
-add_executable(sample_03 sample03.cpp)
-target_include_directories(sample_03 PUBLIC
+add_executable(sample_04 sample04.cpp)
+target_include_directories(sample_04 PUBLIC
     ${GLFW3_INCLUDE_DIR}
     ${OPENGL_INCLUDE_DIR}
 )
 
-target_link_libraries(sample_03 tdrrenderer tdrmain
+target_link_libraries(sample_04 tdrrenderer tdrmain
     ${GLFW3_LIBRARY}
     ${OPENGL_gl_LIBRARY}
     ${CMAKE_DL_LIBS}
@@ -19,3 +19,4 @@ target_link_libraries(sample_03 tdrrenderer tdrmain
 
 file(COPY shaders DESTINATION .)
 file(COPY textures DESTINATION .)
+file(COPY cube.json DESTINATION .)
