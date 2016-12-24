@@ -18,7 +18,7 @@ public:
     static void Delete(std::shared_ptr<TDRMesh> mesh);
     static std::shared_ptr<TDRMesh> Load(const char* buff, size_t len);
     std::vector<float> get(Data type);
-    std::vector<float> has(Data type);
+    bool has(Data type);
 private:
     std::vector<float> m_colordata;
     std::vector<float> m_indexdata;
