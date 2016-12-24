@@ -116,3 +116,9 @@ std::vector<float> TDRMesh::get(TDRMesh::Data type)
     }
 }
 
+bool TDRMesh::has(TDRMesh::Data type)
+{
+    /* TODO:
+     * Elaborate swtich statement like in the get() method. */
+    return false;
+}

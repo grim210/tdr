@@ -4,6 +4,7 @@ std::shared_ptr<Cube> Cube::Create(std::shared_ptr<Texture> tex)
 {
     std::shared_ptr<Cube> box(new Cube());
     box->m_program = ShaderProgram::Create();
+    box->m_mesh = TDRMesh::Load(nullptr, 0);
 
     std::string vshader = load_text_file("./shaders/vshader.vs");
     std::string fshader = load_text_file("./shaders/fshader.fs");
@@ -58,83 +59,8 @@ std::shared_ptr<Cube> Cube::Create(std::shared_ptr<Texture> tex)
         return nullptr;
     }
 
-    static const GLfloat g_vertex_buffer_data[] = {
-        -1.0f, -1.0f, -1.0f,
-        -1.0f, -1.0f,  1.0f,
-        -1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f, -1.0f,
-        -1.0f, -1.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f,
-         1.0f, -1.0f,  1.0f,
-        -1.0f, -1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-         1.0f,  1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-        -1.0f, -1.0f, -1.0f,
-        -1.0f, -1.0f, -1.0f,
-        -1.0f,  1.0f,  1.0f,
-        -1.0f,  1.0f, -1.0f,
-         1.0f, -1.0f,  1.0f,
-        -1.0f, -1.0f,  1.0f,
-        -1.0f, -1.0f, -1.0f,
-        -1.0f,  1.0f,  1.0f,
-        -1.0f, -1.0f,  1.0f,
-         1.0f, -1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f, -1.0f, -1.0f,
-         1.0f,  1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f, -1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f,
-         1.0f,  1.0f,  1.0f,
-        -1.0f,  1.0f, -1.0f,
-        -1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-        -1.0f,  1.0f,  1.0f,
-         1.0f, -1.0f,  1.0f
-    };
-
-    static const GLfloat g_uv_buffer_data[] = {
-        0.000059f, 1.0f-0.000004f,
-        0.000103f, 1.0f-0.336048f,
-        0.335973f, 1.0f-0.335903f,
-        1.000023f, 1.0f-0.000013f,
-        0.667979f, 1.0f-0.335851f,
-        0.999958f, 1.0f-0.336064f,
-        0.667979f, 1.0f-0.335851f,
-        0.336024f, 1.0f-0.671877f,
-        0.667969f, 1.0f-0.671889f,
-        1.000023f, 1.0f-0.000013f,
-        0.668104f, 1.0f-0.000013f,
-        0.667979f, 1.0f-0.335851f,
-        0.000059f, 1.0f-0.000004f,
-        0.335973f, 1.0f-0.335903f,
-        0.336098f, 1.0f-0.000071f,
-        0.667979f, 1.0f-0.335851f,
-        0.335973f, 1.0f-0.335903f,
-        0.336024f, 1.0f-0.671877f,
-        1.000004f, 1.0f-0.671847f,
-        0.999958f, 1.0f-0.336064f,
-        0.667979f, 1.0f-0.335851f,
-        0.668104f, 1.0f-0.000013f,
-        0.335973f, 1.0f-0.335903f,
-        0.667979f, 1.0f-0.335851f,
-        0.335973f, 1.0f-0.335903f,
-        0.668104f, 1.0f-0.000013f,
-        0.336098f, 1.0f-0.000071f,
-        0.000103f, 1.0f-0.336048f,
-        0.000004f, 1.0f-0.671870f,
-        0.336024f, 1.0f-0.671877f,
-        0.000103f, 1.0f-0.336048f,
-        0.336024f, 1.0f-0.671877f,
-        0.335973f, 1.0f-0.335903f,
-        0.667969f, 1.0f-0.671889f,
-        1.000004f, 1.0f-0.671847f,
-        0.667979f, 1.0f-0.335851f
-    };
+    std::vector<float> verts = box->m_mesh->get(TDRMesh::Vertex);
+    std::vector<float> uvs = box->m_mesh->get(TDRMesh::UV);
 
     box->m_texture = std::shared_ptr<GLTexture>(GLTexture::Create(tex));
     if (!box->m_texture->isValid()) {
@@ -146,13 +72,13 @@ std::shared_ptr<Cube> Cube::Create(std::shared_ptr<Texture> tex)
 
     glGenBuffers(1, &box->m_vbuff);
     glBindBuffer(GL_ARRAY_BUFFER, box->m_vbuff);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data),
-        g_vertex_buffer_data, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * verts.size(), verts.data(),
+        GL_STATIC_DRAW);
 
     glGenBuffers(1, &box->m_uvbuff);
     glBindBuffer(GL_ARRAY_BUFFER, box->m_uvbuff);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data),
-        g_uv_buffer_data, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * uvs.size(), uvs.data(),
+        GL_STATIC_DRAW);
 
     box->m_pos = glm::vec3(0.0f, 0.0f, 0.0f);
     box->m_model = glm::translate(glm::mat4(1.0f), box->m_pos);

@@ -17,6 +17,7 @@
 #include <mainutil.h>
 #include <renderobject.h>
 #include <shaderprogram.h>
+#include <tdrmesh.h>
 #include <texture.h>
 
 class Cube : public RenderObject {
@@ -33,6 +34,7 @@ public:
 private:
     std::unique_ptr<ShaderProgram> m_program;
     std::shared_ptr<GLTexture> m_texture;
+    std::shared_ptr<TDRMesh> m_mesh;
 
     GLint m_color_attrib;
     GLint m_uv_attrib;
