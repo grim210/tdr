@@ -17,6 +17,8 @@ public:
     static void Destroy(ShaderProgram* pm);
     bool attachShader(GLenum type, std::string source);
     GLuint getProgram(void);
+    GLint getAttributeLocation(std::string name);
+    GLint getUniformLocation(std::string name);
     bool link(void);
 private:
     struct Shader {

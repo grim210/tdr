@@ -1,7 +1,6 @@
 #include <shaderprogram.h>
 
-std::unique_ptr<ShaderProgram>
-ShaderProgram::Create(void)
+std::unique_ptr<ShaderProgram> ShaderProgram::Create(void)
 {
     std::unique_ptr<ShaderProgram> pm(new ShaderProgram());
 
@@ -15,8 +14,7 @@ ShaderProgram::Create(void)
     return pm;
 }
 
-void
-ShaderProgram::Destroy(ShaderProgram* pm)
+void ShaderProgram::Destroy(ShaderProgram* pm)
 {
     pm->m_linked = false;
 
@@ -27,8 +25,7 @@ ShaderProgram::Destroy(ShaderProgram* pm)
     glDeleteProgram(pm->m_id);
 }
 
-bool
-ShaderProgram::attachShader(GLenum type, std::string source)
+bool ShaderProgram::attachShader(GLenum type, std::string source)
 {
     if (source.length() < 1) {
         return false;
@@ -58,8 +55,7 @@ ShaderProgram::attachShader(GLenum type, std::string source)
     return true;
 }
 
-GLuint
-ShaderProgram::getProgram(void)
+GLuint ShaderProgram::getProgram(void)
 {
     bool result;
 
@@ -73,8 +69,36 @@ ShaderProgram::getProgram(void)
     return m_id;
 }
 
-bool
-ShaderProgram::link(void)
+GLint ShaderProgram::getAttributeLocation(std::string name)
+{
+    GLint result;
+
+    result = glGetAttribLocation(m_id, name.c_str());
+    if (result < 0) {
+#ifdef RENDERER_DEBUG
+        std::cerr << "Failed to find attribute '" << name << "'." << std::endl;
+#endif
+        return -1;
+    }
+
+    return result;
+}
+
+GLint ShaderProgram::getUniformLocation(std::string name)
+{
+    GLint result;
+    result = glGetUniformLocation(m_id, name.c_str());
+    if (result < 1) {
+#ifdef RENDERER_DEBUG
+        std::cerr << "Failed to find uniform '" << name << "'." << std::endl;
+#endif
+        return -1;
+    }
+
+    return result;
+}
+
+bool ShaderProgram::link(void)
 {
     GLint result;
 
