@@ -14,8 +14,9 @@ public:
     };
     TDRMesh(void) { };
     virtual ~TDRMesh(void) { };
+    static std::shared_ptr<TDRMesh> Cube(void);
     static void Delete(std::shared_ptr<TDRMesh> mesh);
-    std::shared_ptr<TDRMesh> Load(const char* buff, size_t len);
+    static std::shared_ptr<TDRMesh> Load(const char* buff, size_t len);
     std::vector<float> get(Data type);
     std::vector<float> has(Data type);
 private:
