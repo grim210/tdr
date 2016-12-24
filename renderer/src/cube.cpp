@@ -4,7 +4,7 @@ std::shared_ptr<Cube> Cube::Create(std::shared_ptr<Texture> tex)
 {
     std::shared_ptr<Cube> box(new Cube());
     box->m_program = ShaderProgram::Create();
-    box->m_mesh = TDRMesh::Load(nullptr, 0);
+    box->m_mesh = TDRMesh::Cube();
 
     std::string vshader = load_text_file("./shaders/vshader.vs");
     std::string fshader = load_text_file("./shaders/fshader.fs");

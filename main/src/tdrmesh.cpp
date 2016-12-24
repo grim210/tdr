@@ -1,13 +1,8 @@
 #include <tdrmesh.h>
 
-void TDRMesh::Delete(std::shared_ptr<TDRMesh> mesh)
+std::shared_ptr<TDRMesh> TDRMesh::Cube(void)
 {
-	delete(mesh.get());
-}
-
-std::shared_ptr<TDRMesh> TDRMesh::Load(const char* buff, size_t len)
-{
-	std::shared_ptr<TDRMesh> mesh(new TDRMesh());
+    std::shared_ptr<TDRMesh> mesh(new TDRMesh());
 
     static const float g_vertex_buffer_data[] = {
         -1.0f, -1.0f, -1.0f,
@@ -87,15 +82,26 @@ std::shared_ptr<TDRMesh> TDRMesh::Load(const char* buff, size_t len)
         0.667979f, 1.0f-0.335851f
     };
 
-	for (size_t i = 0; i < sizeof(g_vertex_buffer_data); i++) {
-		mesh->m_vertexdata.push_back(g_vertex_buffer_data[i]);
-	}
+    for (size_t i = 0; i < sizeof(g_vertex_buffer_data); i++) {
+        mesh->m_vertexdata.push_back(g_vertex_buffer_data[i]);
+    }
 
-	for (size_t i = 0; i < sizeof(g_uv_buffer_data); i++) {
-		mesh->m_uvdata.push_back(g_uv_buffer_data[i]);
-	}
+    for (size_t i = 0; i < sizeof(g_uv_buffer_data); i++) {
+        mesh->m_uvdata.push_back(g_uv_buffer_data[i]);
+    }
 
-	return mesh;
+    return mesh;
+}
+
+void TDRMesh::Delete(std::shared_ptr<TDRMesh> mesh)
+{
+
+}
+
+std::shared_ptr<TDRMesh> TDRMesh::Load(const char* buffer, size_t len)
+{
+    std::shared_ptr<TDRMesh> ret(new TDRMesh());
+    return ret;
 }
 
 std::vector<float> TDRMesh::get(TDRMesh::Data type)
