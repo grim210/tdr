@@ -1,7 +1,7 @@
 #ifndef RENDERER_GLTEXTURE_H
 #define RENDERER_GLTEXTURE_H
 
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
 #include <iostream>
 #endif
 

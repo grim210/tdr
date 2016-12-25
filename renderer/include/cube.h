@@ -1,7 +1,7 @@
 #ifndef RENDERER_CUBE_H
 #define RENDERER_CUBE_H
 
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
 #include <iostream>
 #endif
 

@@ -1,6 +1,10 @@
 #ifndef RENDERER_CAMERA_H
 #define RENDERER_CAMERA_H
 
+#ifdef TDRMAIN_DEBUG
+#include <iostream>
+#endif
+
 #include <memory>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

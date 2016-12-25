@@ -4,7 +4,7 @@ DirectDrawTexture::DirectDrawTexture(std::string path)
 {
     std::fstream fp(path);
     if (!fp.is_open()) {
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
         std::cerr << "Failed to open file: " << path << std::endl;
 #endif
         m_ready = false;
@@ -23,7 +23,7 @@ DirectDrawTexture::DirectDrawTexture(std::string path)
     fp.close();
 
     if (!this->load(buff, len)) {
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
         std::cerr << "Failed to load DDS Texture." << std::endl;
 #endif
         m_ready = false;
@@ -39,7 +39,7 @@ bool DirectDrawTexture::load(char* buff, size_t len)
     char filecode[4] = {0};
 
     if (len < 128) {
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
         std::cerr << "Invalid DDSTexture size." << std::endl;
 #endif
         return false;
@@ -52,7 +52,7 @@ bool DirectDrawTexture::load(char* buff, size_t len)
     memcpy(m_buffer.data(), buff + 128, len - 128);
 
     if (strncmp(filecode, "DDS ", 4) != 0) {
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
         std::cerr << "Invalid filecode for DDS Texture." << std::endl;
 #endif
         return false;
@@ -75,7 +75,7 @@ bool DirectDrawTexture::load(char* buff, size_t len)
         m_level = DXT5;
         break;
     default:
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
         std::cerr << "Undefined compression type for DDS Texture.";
         std::cerr << std::endl;
 #endif

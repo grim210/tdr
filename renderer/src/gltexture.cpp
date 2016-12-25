@@ -22,7 +22,7 @@ std::shared_ptr<GLTexture> GLTexture::Create(std::shared_ptr<Texture> tex)
         format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
         bsize = 16;
     } else {
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
         std::cerr << "Unrecognized image format: " << strformat << std::endl;
 #endif
         return nullptr;

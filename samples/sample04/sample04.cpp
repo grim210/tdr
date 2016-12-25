@@ -9,9 +9,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <tdrmain.h>
-#include <gltexture.h>
-#include <shaderprogram.h>
-#include <window.h>
+#include <tdrrenderer.h>
 
 class Model : public RenderObject {
 public:
@@ -110,7 +108,7 @@ std::shared_ptr<Model> Model::Create(void)
     std::vector<float> verts = model->m_mesh->get(TDRMesh::Vertex);
     std::vector<float> uvs = model->m_mesh->get(TDRMesh::UV);
 
-#ifdef TDRSAMPLES_DEBUG
+#ifdef TDR_DEBUG
     model->dump_triplets(verts);
     model->dump_doubles(uvs);
 #endif

@@ -6,10 +6,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <camera.h>
-#include <cube.h>
-#include <directdrawtexture.h>
-#include <window.h>
+#include <tdrmain.h>
+#include <tdrrenderer.h>
 
 int main(int argc, char* argv[])
 {

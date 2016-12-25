@@ -5,17 +5,24 @@ set(tdr_VERSION_MAJOR 0)
 set(tdr_VERSION_MINOR 0)
 set(tdr_VERSION_PATCH 1)
 
-message("System: ${CMAKE_SYSTEM_NAME}")
+message("-- System Name: '${CMAKE_SYSTEM_NAME}'")
 
 # Check for C++11 compiler
 include(CheckCXXCompilerFlag)
-CHECK_CXX_COMPILER_FLAG(-std=c++11 SUPPORTS_CXX11)
+if(CMAKE_COMPILER_IS_GNUCXX)
+    CHECK_CXX_COMPILER_FLAG(-std=c++11 SUPPORTS_CXX11)
+else()
+    # Assume the individual building the software knows what they're doing.
+    set(SUPPORTS_CXX11 TRUE)
+    message("** Warning: Only GNU's C++ compiler is officially supported.")
+endif()
+
 if(NOT SUPPORTS_CXX11)
-    message(FATAL_ERROR "Failed to find C++11 capable compiler.")
+    message(FATAL_ERROR "!! Error: Failed to find C++11 capable compiler.")
 endif()
 
 # There needs to be a better way of doing this..
-option(ARCH_32 "Target 32-bit libraries." TRUE)
+option(ARCH_WIN32 "Target 32-bit libraries." TRUE)
 
 # Find OpenGL, necessary for tdrrenderer, and the samples
 find_package(OpenGL)
@@ -33,7 +40,7 @@ if(UNIX)
         find_package(glfw3 3.0 REQUIRED)
     endif()
 elseif(MSYS)
-    if(ARCH_32)
+    if(ARCH_WIN32)
         set(GLFW3_LIBRARY_DIR "-L/mingw32/lib")
         set(GLFW3_INCLUDE_DIR "-I/mingw32/include")
         set(GLFW3_LIBRARY "-lglfw3 -lgdi32")

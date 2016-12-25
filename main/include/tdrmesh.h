@@ -1,7 +1,7 @@
 #ifndef TDRMAIN_TDRMESH_H
 #define TDRMAIN_TDRMESH_H
 
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
 #include <iostream>
 #endif
 

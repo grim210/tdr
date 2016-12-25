@@ -1,6 +1,6 @@
 #include <tdrmesh.h>
 
-#define _TDRMESH_BUFF_LEN       (256)
+#define TDRMESH_BUFF_LEN       (256)
 
 std::shared_ptr<TDRMesh> TDRMesh::Cube(void)
 {
@@ -115,7 +115,7 @@ std::shared_ptr<TDRMesh> TDRMesh::Load(const char* buffer, size_t len)
     count = jsmn_parse(&parser, buffer, len, tokens.data(), tokens.size());
 
     char type = '\0';
-    char buff[_TDRMESH_BUFF_LEN];
+    char buff[TDRMESH_BUFF_LEN];
 
     for (size_t i = 0; i < tokens.size(); i++) {
         int len = tokens[i].end - tokens[i].start + 1;
@@ -141,7 +141,7 @@ std::shared_ptr<TDRMesh> TDRMesh::Load(const char* buffer, size_t len)
                 ret->m_colordata = ret->parse_array(tjson, len);
                 break;
             default:
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
                 std::cerr << "Unrecognized character in TDRMesh::Load.  ";
                 std::cerr << "Skipping..." << std::endl;
 #endif
@@ -149,7 +149,7 @@ std::shared_ptr<TDRMesh> TDRMesh::Load(const char* buffer, size_t len)
             }
             break;
         case JSMN_STRING:
-            memset(buff, 0, _TDRMESH_BUFF_LEN);
+            memset(buff, 0, TDRMESH_BUFF_LEN);
             tjson = buffer + tokens[i].start;
             snprintf(buff, len, "%s", tjson);
 
@@ -169,13 +169,13 @@ std::shared_ptr<TDRMesh> TDRMesh::Load(const char* buffer, size_t len)
             break;
         case JSMN_PRIMITIVE:
         case JSMN_OBJECT:
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
             std::cerr << "Found primitive or object.  Skipping.";
             std::cerr << std::endl;
 #endif
             break;
         default:
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
             std::cerr << "Unrecognized JSON token found.  Skipping.";
             std::cerr << std::endl;
 #endif
@@ -214,12 +214,12 @@ bool TDRMesh::has(TDRMesh::Data type)
 std::vector<float> TDRMesh::parse_array(const char* json, size_t len)
 {
     int tok_count;
-    char buff[_TDRMESH_BUFF_LEN];
+    char buff[TDRMESH_BUFF_LEN];
     char str[len + 1];
     std::vector<float> ret;
     std::vector<jsmntok_t> tokens;
 
-    memset(buff, 0, _TDRMESH_BUFF_LEN);
+    memset(buff, 0, TDRMESH_BUFF_LEN);
     memset(str, 0, len + 1);
     snprintf(str, len, "%s", json);
 
@@ -231,7 +231,7 @@ std::vector<float> TDRMesh::parse_array(const char* json, size_t len)
     jsmn_init(&parser);
     if (tok_count != jsmn_parse(&parser, str, len, tokens.data(),
         tokens.size())) {
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
         std::cerr << "Failed to parse array.  Token size mismatch.";
         std::cerr << std::endl;
 #endif
@@ -239,7 +239,7 @@ std::vector<float> TDRMesh::parse_array(const char* json, size_t len)
     }
 
     if (tokens[0].type != JSMN_ARRAY) {
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
         std::cerr << "Failed to parse array.  Array not found.";
         std::cerr << std::endl;
 #endif
@@ -248,14 +248,14 @@ std::vector<float> TDRMesh::parse_array(const char* json, size_t len)
 
     for (size_t i = 1; i < tokens.size(); i++) {
         if (tokens[i].type != JSMN_PRIMITIVE) {
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
             std::cerr << "Failed to parse array.  Expecting primitive.";
             std::cerr << std::endl;
 #endif
             return ret;
         }
 
-        memset(buff, 0, _TDRMESH_BUFF_LEN);
+        memset(buff, 0, TDRMESH_BUFF_LEN);
         snprintf(buff, tokens[i].end - tokens[i].start + 1, "%s",
             str + tokens[i].start);
         float temp = std::atof(buff);

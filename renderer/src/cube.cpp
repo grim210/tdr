@@ -10,7 +10,7 @@ std::shared_ptr<Cube> Cube::Create(std::shared_ptr<Texture> tex)
     std::string fshader = load_text_file("./shaders/fshader.fs");
 
     if (!box->m_program->attachShader(GL_VERTEX_SHADER, vshader)) {
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
         std::cerr << "Failed to attach vertex shader! ::" << std::endl;
         std::cerr << vshader << std::endl;
 #endif
@@ -18,7 +18,7 @@ std::shared_ptr<Cube> Cube::Create(std::shared_ptr<Texture> tex)
     }
 
     if (!box->m_program->attachShader(GL_FRAGMENT_SHADER, fshader)) {
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
         std::cerr << "Failed to attach fragment shader! ::" << std::endl;
         std::cerr << fshader << std::endl;
 #endif
@@ -26,7 +26,7 @@ std::shared_ptr<Cube> Cube::Create(std::shared_ptr<Texture> tex)
     }
 
     if (!box->m_program->link()) {
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
         std::cerr << "Failed to link shader program." << std::endl;
 #endif
         return nullptr;
@@ -35,7 +35,7 @@ std::shared_ptr<Cube> Cube::Create(std::shared_ptr<Texture> tex)
     box->m_uv_attrib = glGetAttribLocation(box->m_program->getProgram(),
         "vertexUV");
     if (box->m_uv_attrib < 0) {
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
         std::cerr << "Failed to find UV attribute location." << std::endl;
 #endif
         return nullptr;
@@ -44,7 +44,7 @@ std::shared_ptr<Cube> Cube::Create(std::shared_ptr<Texture> tex)
     box->m_vpos_attrib = glGetAttribLocation(box->m_program->getProgram(),
         "vertexPosition_modelspace");
     if (box->m_vpos_attrib < 0) {
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
         std::cerr << "Failed to find vertex attribute location." << std::endl;
 #endif
         return nullptr;
@@ -53,7 +53,7 @@ std::shared_ptr<Cube> Cube::Create(std::shared_ptr<Texture> tex)
     box->m_mvp_uniform = glGetUniformLocation(box->m_program->getProgram(),
         "MVP");
     if (box->m_mvp_uniform < 0) {
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
         std::cerr << "Failed to find the MVP uniform." << std::endl;
 #endif
         return nullptr;
@@ -64,7 +64,7 @@ std::shared_ptr<Cube> Cube::Create(std::shared_ptr<Texture> tex)
 
     box->m_texture = std::shared_ptr<GLTexture>(GLTexture::Create(tex));
     if (!box->m_texture->isValid()) {
-#ifdef RENDERER_DEBUG
+#ifdef TDR_DEBUG
         std::cerr << "Failed to create OpenGL texture." << std::endl;
 #endif
         return nullptr;

@@ -1,4 +1,4 @@
-#include "rendererutil.h"
+#include <tdrrenderer.h>
 
 const char* tdrrenderer_version(void)
 {

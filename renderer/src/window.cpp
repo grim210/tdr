@@ -1,13 +1,11 @@
 #include <window.h>
 
-void
-Window::Destroy(Window* win)
+void Window::Destroy(Window* win)
 {
     glfwTerminate();
 }
 
-std::unique_ptr<Window>
-Window::Initialize(int w, int h, bool fs)
+std::unique_ptr<Window> Window::Initialize(int w, int h, bool fs)
 {
     std::unique_ptr<Window> win(new Window());
     win->m_width = w;
@@ -40,14 +38,12 @@ Window::Initialize(int w, int h, bool fs)
     return win;
 }
 
-void
-Window::clear(void)
+void Window::clear(void)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-bool
-Window::swap(void)
+bool Window::swap(void)
 {
     glfwSwapBuffers(m_window);
     glfwPollEvents();
@@ -55,8 +51,7 @@ Window::swap(void)
     return (!glfwWindowShouldClose(m_window));
 }
 
-void
-Window::setClearColor(float r, float g, float b, float a)
+void Window::setClearColor(float r, float g, float b, float a)
 {
     glClearColor(r, g, b, a);
 }
