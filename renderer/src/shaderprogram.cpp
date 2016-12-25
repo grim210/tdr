@@ -86,9 +86,8 @@ GLint ShaderProgram::getAttributeLocation(std::string name)
 
 GLint ShaderProgram::getUniformLocation(std::string name)
 {
-    GLint result;
-    result = glGetUniformLocation(m_id, name.c_str());
-    if (result < 1) {
+    GLint result = glGetUniformLocation(m_id, name.c_str());
+    if (result < 0) {
 #ifdef TDR_DEBUG
         std::cerr << "Failed to find uniform '" << name << "'." << std::endl;
 #endif
