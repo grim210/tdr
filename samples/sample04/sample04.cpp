@@ -19,6 +19,7 @@ public:
     virtual ~Model(void) { };
     static std::shared_ptr<Model> Create(void);
     static void Delete(std::shared_ptr<Model> model);
+    bool addTexture(std::shared_ptr<DirectDrawTexture> ddt);
 
     /* overridden from RenderObject */
     void draw(void);
@@ -49,6 +50,9 @@ private:
     glm::vec3 m_pos;
     glm::mat4 m_model;
     glm::mat4 m_mvp;
+
+    void dump_doubles(std::vector<float> arr);
+    void dump_triplets(std::vector<float> arr);
 };
 
 int main(int argc, char* argv[])
@@ -63,9 +67,8 @@ int main(int argc, char* argv[])
     std::shared_ptr<DirectDrawTexture> ddtex(
         new DirectDrawTexture("textures/uvtemplate.dds"));
     std::shared_ptr<Model> model = Model::Create();
-    /*
+    model->addTexture(ddtex);
     std::shared_ptr<Camera> camera = Camera::Create(model);
-    */
 
     glm::mat4 proj = glm::perspective(45.0f, 800.0f / 600.0f, 0.1f, 100.0f);
 
@@ -73,11 +76,9 @@ int main(int argc, char* argv[])
     while (running) {
         double elapsed = glfwGetTime();
 
-        /*
         model->update(elapsed, camera->getView(), proj);
         window->clear();
         model->draw();
-        */
         running = window->swap();
     }
 
@@ -94,10 +95,38 @@ std::shared_ptr<Model> Model::Create(void)
     std::string fshader = load_text_file("./shaders/fshader.fs");
     std::string modeldata = load_text_file("./cube.json");
 
-    std::cout << modeldata << std::endl;
-    
     model->m_program = ShaderProgram::Create();
     model->m_mesh = TDRMesh::Load(modeldata.c_str(), modeldata.length());
+
+    model->m_program->attachShader(GL_VERTEX_SHADER, vshader);
+    model->m_program->attachShader(GL_FRAGMENT_SHADER, fshader);
+    model->m_program->link();
+
+    model->m_uv_attrib = model->m_program->getAttributeLocation("vertexUV");
+    model->m_vpos_attrib = model->m_program->getAttributeLocation(
+        "vertexPosition_modelspace");
+    model->m_mvp_uniform = model->m_program->getUniformLocation("MVP");
+
+    std::vector<float> verts = model->m_mesh->get(TDRMesh::Vertex);
+    std::vector<float> uvs = model->m_mesh->get(TDRMesh::UV);
+
+#ifdef TDRSAMPLES_DEBUG
+    model->dump_triplets(verts);
+    model->dump_doubles(uvs);
+#endif
+
+    glGenBuffers(1, &model->m_vbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, model->m_vbuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * verts.size(), verts.data(),
+        GL_STATIC_DRAW);
+
+    glGenBuffers(1, &model->m_uvbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, model->m_uvbuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * uvs.size(), uvs.data(),
+        GL_STATIC_DRAW);
+
+    model->m_pos = glm::vec3(0.0f, 0.0f, 0.0f);
+    model->m_model = glm::translate(glm::mat4(1.0f), model->m_pos);
 
     return model;
 }
@@ -107,6 +136,16 @@ void Model::Delete(std::shared_ptr<Model> model)
     glDeleteBuffers(1, &model->m_vbuffer);
     glDeleteBuffers(1, &model->m_uvbuffer);
     ShaderProgram::Destroy(model->m_program);
+}
+
+bool Model::addTexture(std::shared_ptr<DirectDrawTexture> ddt)
+{
+    m_texture = std::shared_ptr<GLTexture>(GLTexture::Create(ddt));
+    if (!m_texture->isValid()) {
+        return false;
+    }
+
+    return true;
 }
 
 void Model::draw(void)
@@ -124,7 +163,7 @@ void Model::draw(void)
 
     glEnableVertexAttribArray(m_uv_attrib);
     glBindBuffer(GL_ARRAY_BUFFER, m_uvbuffer);
-    glVertexAttribPointer(m_uv_attrib, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glVertexAttribPointer(m_uv_attrib, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     glDrawArrays(GL_TRIANGLES, 0, 12*3);
     glDisableVertexAttribArray(m_vpos_attrib);
@@ -151,4 +190,28 @@ bool Model::translate(glm::vec3 offset)
 void Model::update(double elapsed, glm::mat4 view, glm::mat4 proj)
 {
     m_mvp = proj * view * m_model;
+}
+
+void Model::dump_triplets(std::vector<float> arr)
+{
+    for (size_t i = 0; i < arr.size(); i++) {
+        if ((i != 0) && (i % 3 == 0)) {
+            std::cout << std::endl;
+        }
+    
+        fprintf(stdout, "%.4f, ", arr[i]);
+    }
+    std::cout << std::endl;
+}
+
+void Model::dump_doubles(std::vector<float> arr)
+{
+    for (size_t i = 0; i < arr.size(); i++) {
+        if ((i != 0) && (i % 2 == 0)) {
+            std::cout << std::endl;
+        }
+
+        fprintf(stdout, "%.4f, ", arr[i]);
+    }
+    std::cout << std::endl;
 }

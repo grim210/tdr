@@ -1,8 +1,16 @@
 #ifndef TDRMAIN_TDRMESH_H
 #define TDRMAIN_TDRMESH_H
 
+#ifdef RENDERER_DEBUG
+#include <iostream>
+#endif
+
+#include <cstring>
 #include <memory>
+#include <string>
 #include <vector>
+
+#include <jsmn.h>
 
 class TDRMesh {
 public:
@@ -22,8 +30,11 @@ public:
 private:
     std::vector<float> m_colordata;
     std::vector<float> m_indexdata;
+    std::vector<float> m_normals;
     std::vector<float> m_uvdata;
     std::vector<float> m_vertexdata;
+
+    std::vector<float> parse_array(const char* json, size_t len);
 };
 
 #endif  /* TDRMAIN_TDRMESH_H */
