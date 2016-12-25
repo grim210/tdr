@@ -2,6 +2,7 @@
 libtdrmain.a
 libtdrrenderer.a
 sample_*
+config.h
 
 # ignore the build directory; a by-product of CMake
 build
