@@ -1,11 +1,13 @@
-#ifndef TDR_RENDERER_UTIL
-#define TDR_RENDERER_UTIL
+#ifndef TDRRENDERER_H
+#define TDRRENDERER_H
 
-#include <cube.h>
-#include <gltexture.h>
-#include <shaderprogram.h>
-#include <window.h>
+#include "config.h"
 
-const char* tdrrenderer_version(void);
+#include "cube.h"
+#include "gltexture.h"
+#include "shaderprogram.h"
+#include "window.h"
 
-#endif /* TDR_RENDERER_UTIL */
+void tdrrenderer_version(char* buff, size_t len);
+
+#endif /* TDRRENDERER_H */

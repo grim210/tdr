@@ -1,4 +1,11 @@
 project(tdrrenderer CXX)
 subdirs(src)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(TDRRENDERER_VERSION_MAJOR ${tdr_VERSION_MAJOR})
+set(TDRRENDERER_VERSION_MINOR ${tdr_VERSION_MINOR})
+set(TDRRENDERER_VERSION_PATCH ${tdr_VERSION_PATCH})
+
+configure_file(
+    "${tdrrenderer_SOURCE_DIR}/include/config.h.in"
+    "${tdrrenderer_SOURCE_DIR}/include/config.h"
+)

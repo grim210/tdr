@@ -93,17 +93,46 @@ std::shared_ptr<Model> Model::Create(void)
     std::string fshader = load_text_file("./shaders/fshader.fs");
     std::string modeldata = load_text_file("./cube.json");
 
+#ifdef TDR_DEBUG
+    std::cout << "Vertex Shader Code" << std::endl << vshader << std::endl;
+    std::cout << "Fragment Shader Code" << std::endl << fshader << std::endl;
+#endif
+
     model->m_program = ShaderProgram::Create();
     model->m_mesh = TDRMesh::Load(modeldata.c_str(), modeldata.length());
 
     model->m_program->attachShader(GL_VERTEX_SHADER, vshader);
     model->m_program->attachShader(GL_FRAGMENT_SHADER, fshader);
-    model->m_program->link();
+    if (!model->m_program->link()) {
+#ifdef TDR_DEBUG
+        std::cerr << "Failed to link shader code.  Aborting." << std::endl;
+#endif
+        return nullptr;
+    }
 
     model->m_uv_attrib = model->m_program->getAttributeLocation("vertexUV");
     model->m_vpos_attrib = model->m_program->getAttributeLocation(
         "vertexPosition_modelspace");
     model->m_mvp_uniform = model->m_program->getUniformLocation("MVP");
+
+    if (model->m_uv_attrib == -1 || model->m_vpos_attrib == -1 ||
+        model->m_mvp_uniform == -1) {
+#ifdef TDR_DEBUG
+        if (model->m_uv_attrib == -1) {
+            std::cerr << "Failed to find UV attribute." << std::endl;
+        }
+
+        if (model->m_vpos_attrib == -1) {
+            std::cerr << "Failed to find vertex position attribute.";
+            std::cerr << std::endl;
+        }
+
+        if (model->m_mvp_uniform == -1) {
+            std::cerr << "Failed to find MVP matrix uniform." << std::endl;
+        }
+#endif
+        return nullptr;
+    }
 
     std::vector<float> verts = model->m_mesh->get(TDRMesh::Vertex);
     std::vector<float> uvs = model->m_mesh->get(TDRMesh::UV);

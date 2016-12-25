@@ -18,7 +18,9 @@ std::string load_text_file(std::string path)
     return std::string(buff.get());
 }
 
-const char* tdrmain_version(void)
+void tdrmain_version(char* buff, size_t len)
 {
-    return "0.1.0";
+    memset(buff, 0, len);
+    snprintf(buff, len, "%d.%d.%d", TDRMAIN_VERSION_MAJOR,
+        TDRMAIN_VERSION_MINOR, TDRMAIN_VERSION_PATCH);
 }

@@ -3,7 +3,7 @@ project(tdr CXX)
 
 set(tdr_VERSION_MAJOR 0)
 set(tdr_VERSION_MINOR 0)
-set(tdr_VERSION_PATCH 1)
+set(tdr_VERSION_PATCH 2)
 
 message("-- System Name: '${CMAKE_SYSTEM_NAME}'")
 
@@ -17,7 +17,9 @@ else()
     message("** Warning: Only GNU's C++ compiler is officially supported.")
 endif()
 
-if(NOT SUPPORTS_CXX11)
+if(SUPPORTS_CXX11)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+else()
     message(FATAL_ERROR "!! Error: Failed to find C++11 capable compiler.")
 endif()
 

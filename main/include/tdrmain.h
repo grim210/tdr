@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "config.h"
+
 #include "camera.h"
 #include "directdrawtexture.h"
 #include "jsmn.h"
@@ -11,6 +13,6 @@
 #include "texture.h"
 
 std::string load_text_file(std::string path);
-const char* tdrmain_version(void);
+void tdrmain_version(char* buff, size_t len);
 
 #endif

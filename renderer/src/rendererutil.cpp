@@ -1,6 +1,8 @@
 #include <tdrrenderer.h>
 
-const char* tdrrenderer_version(void)
+void tdrrenderer_version(char* buff, size_t len)
 {
-    return "0.1.0";
+    std::memset(buff, 0, len);
+    snprintf(buff, len, "%d.%d.%d", TDRRENDERER_VERSION_MAJOR,
+        TDRRENDERER_VERSION_MINOR, TDRRENDERER_VERSION_PATCH);
 }

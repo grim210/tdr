@@ -4,8 +4,13 @@
 
 int main(int argc, char* argv[])
 {
-    std::cout << "Main:     " << tdrmain_version() << std::endl;
-    std::cout << "Renderer: " << tdrrenderer_version() << std::endl;
+    char buff[16];
+
+    tdrmain_version(buff, 16);
+    std::cout << "Main:     " << buff << std::endl;
+
+    tdrrenderer_version(buff, 16);
+    std::cout << "Renderer: " << buff << std::endl;
 
     return 0;
 }
