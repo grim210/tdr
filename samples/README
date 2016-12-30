@@ -1,0 +1,16 @@
+Samples
+=======
+Sample 01 - Ensures that tdr is linked properly.  Returns versions of the
+    main and renderer subcomponents.
+
+Main
+----
+Sample 02 - Checks to see that we're able to load JSON files correctly using
+    the TDRMesh class.
+Sample 04 - Displays the same cube as Sample 03, but loads the cube via the
+    JSON mesh file.
+
+Renderer
+--------
+Sample 03 - Renders a cube to the screen.  The vertices and UV data is hard-
+    coded into the class code.
