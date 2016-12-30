@@ -206,9 +206,30 @@ std::vector<float> TDRMesh::get(TDRMesh::Data type)
 
 bool TDRMesh::has(TDRMesh::Data type)
 {
-    /* TODO:
-     * Elaborate swtich statement like in the get() method. */
-    return false;
+    switch (type) {
+    case TDRMesh::Color:
+        if (m_colordata.size() > 0) {
+            return true;
+        }
+        return false;
+    case TDRMesh::Index:
+        if (m_indexdata.size() > 0) {
+            return true;
+        }
+        return false;
+    case TDRMesh::UV:
+        if (m_uvdata.size() > 0) {
+            return true;
+        }
+        return false;
+    case TDRMesh::Vertex:
+        if (m_vertexdata.size() > 0) {
+            return true;
+        }
+        return false;
+    default:
+        return false;
+    }
 }
 
 std::vector<float> TDRMesh::parse_array(const char* json, size_t len)
