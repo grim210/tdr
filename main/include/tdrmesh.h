@@ -12,6 +12,8 @@
 
 #include <jsmn.h>
 
+#define TDRMESH_BUFF_MAXLEN        (256)
+
 class TDRMesh {
 public:
     enum Data {
