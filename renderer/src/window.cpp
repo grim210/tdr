@@ -17,7 +17,7 @@ std::unique_ptr<Window> Window::Initialize(int w, int h, bool fs)
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-    glfwWindowHint(GLFW_DOUBLEBUFFER, 1);
+    //glfwWindowHint(GLFW_DOUBLEBUFFER, 1);
     win->m_window = glfwCreateWindow(win->m_width, win->m_height,
         DEFAULT_WINDOW_TITLE, nullptr, nullptr);
     if (win->m_window == NULL) {

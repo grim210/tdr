@@ -2,7 +2,7 @@
 
 std::shared_ptr<ShaderProgram> ShaderProgram::Create(void)
 {
-    std::unique_ptr<ShaderProgram> pm(new ShaderProgram());
+    std::shared_ptr<ShaderProgram> pm(new ShaderProgram());
 
     pm->m_linked = false;
     pm->m_id = glCreateProgram();
