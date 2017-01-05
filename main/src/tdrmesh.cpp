@@ -1,100 +1,5 @@
 #include <tdrmesh.h>
 
-#define TDRMESH_BUFF_LEN       (256)
-
-std::shared_ptr<TDRMesh> TDRMesh::Cube(void)
-{
-    std::shared_ptr<TDRMesh> mesh(new TDRMesh());
-
-    static const float g_vertex_buffer_data[] = {
-        -1.0f, -1.0f, -1.0f,
-        -1.0f, -1.0f,  1.0f,
-        -1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f, -1.0f,
-        -1.0f, -1.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f,
-         1.0f, -1.0f,  1.0f,
-        -1.0f, -1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-         1.0f,  1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-        -1.0f, -1.0f, -1.0f,
-        -1.0f, -1.0f, -1.0f,
-        -1.0f,  1.0f,  1.0f,
-        -1.0f,  1.0f, -1.0f,
-         1.0f, -1.0f,  1.0f,
-        -1.0f, -1.0f,  1.0f,
-        -1.0f, -1.0f, -1.0f,
-        -1.0f,  1.0f,  1.0f,
-        -1.0f, -1.0f,  1.0f,
-         1.0f, -1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f, -1.0f, -1.0f,
-         1.0f,  1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f, -1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f,
-         1.0f,  1.0f,  1.0f,
-        -1.0f,  1.0f, -1.0f,
-        -1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-        -1.0f,  1.0f,  1.0f,
-         1.0f, -1.0f,  1.0f
-    };
-
-    static const float g_uv_buffer_data[] = {
-        0.000059f, 1.0f-0.000004f,
-        0.000103f, 1.0f-0.336048f,
-        0.335973f, 1.0f-0.335903f,
-        1.000023f, 1.0f-0.000013f,
-        0.667979f, 1.0f-0.335851f,
-        0.999958f, 1.0f-0.336064f,
-        0.667979f, 1.0f-0.335851f,
-        0.336024f, 1.0f-0.671877f,
-        0.667969f, 1.0f-0.671889f,
-        1.000023f, 1.0f-0.000013f,
-        0.668104f, 1.0f-0.000013f,
-        0.667979f, 1.0f-0.335851f,
-        0.000059f, 1.0f-0.000004f,
-        0.335973f, 1.0f-0.335903f,
-        0.336098f, 1.0f-0.000071f,
-        0.667979f, 1.0f-0.335851f,
-        0.335973f, 1.0f-0.335903f,
-        0.336024f, 1.0f-0.671877f,
-        1.000004f, 1.0f-0.671847f,
-        0.999958f, 1.0f-0.336064f,
-        0.667979f, 1.0f-0.335851f,
-        0.668104f, 1.0f-0.000013f,
-        0.335973f, 1.0f-0.335903f,
-        0.667979f, 1.0f-0.335851f,
-        0.335973f, 1.0f-0.335903f,
-        0.668104f, 1.0f-0.000013f,
-        0.336098f, 1.0f-0.000071f,
-        0.000103f, 1.0f-0.336048f,
-        0.000004f, 1.0f-0.671870f,
-        0.336024f, 1.0f-0.671877f,
-        0.000103f, 1.0f-0.336048f,
-        0.336024f, 1.0f-0.671877f,
-        0.335973f, 1.0f-0.335903f,
-        0.667969f, 1.0f-0.671889f,
-        1.000004f, 1.0f-0.671847f,
-        0.667979f, 1.0f-0.335851f
-    };
-
-    for (size_t i = 0; i < sizeof(g_vertex_buffer_data) / sizeof(float); i++) {
-        mesh->m_vertexdata.push_back(g_vertex_buffer_data[i]);
-    }
-
-    for (size_t i = 0; i < sizeof(g_uv_buffer_data) / sizeof(float); i++) {
-        mesh->m_uvdata.push_back(g_uv_buffer_data[i]);
-    }
-
-    return mesh;
-}
-
 void TDRMesh::Delete(std::shared_ptr<TDRMesh> mesh)
 {
 
@@ -115,7 +20,7 @@ std::shared_ptr<TDRMesh> TDRMesh::Load(const char* buffer, size_t len)
     count = jsmn_parse(&parser, buffer, len, tokens.data(), tokens.size());
 
     char type = '\0';
-    char buff[TDRMESH_BUFF_LEN];
+    char buff[TDRMESH_BUFF_MAXLEN];
 
     for (size_t i = 0; i < tokens.size(); i++) {
         int len = tokens[i].end - tokens[i].start + 1;
@@ -149,7 +54,7 @@ std::shared_ptr<TDRMesh> TDRMesh::Load(const char* buffer, size_t len)
             }
             break;
         case JSMN_STRING:
-            memset(buff, 0, TDRMESH_BUFF_LEN);
+            memset(buff, 0, TDRMESH_BUFF_MAXLEN);
             tjson = buffer + tokens[i].start;
             snprintf(buff, len, "%s", tjson);
 
@@ -235,12 +140,12 @@ bool TDRMesh::has(TDRMesh::Data type)
 std::vector<float> TDRMesh::parse_array(const char* json, size_t len)
 {
     int tok_count;
-    char buff[TDRMESH_BUFF_LEN];
+    char buff[TDRMESH_BUFF_MAXLEN];
     char str[len + 1];
     std::vector<float> ret;
     std::vector<jsmntok_t> tokens;
 
-    memset(buff, 0, TDRMESH_BUFF_LEN);
+    memset(buff, 0, TDRMESH_BUFF_MAXLEN);
     memset(str, 0, len + 1);
     snprintf(str, len, "%s", json);
 
@@ -276,7 +181,7 @@ std::vector<float> TDRMesh::parse_array(const char* json, size_t len)
             return ret;
         }
 
-        memset(buff, 0, TDRMESH_BUFF_LEN);
+        memset(buff, 0, TDRMESH_BUFF_MAXLEN);
         snprintf(buff, tokens[i].end - tokens[i].start + 1, "%s",
             str + tokens[i].start);
         float temp = std::atof(buff);
