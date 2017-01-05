@@ -112,6 +112,66 @@ std::vector<float> TDRMesh::get(TDRMesh::Data type)
     }
 }
 
+std::vector<float> TDRMesh::getData(size_t index, Data type)
+{
+    switch (type) {
+    case Color:
+        return m_objs[index].colors;
+    case Index:
+        return m_objs[index].indeces;
+    case Normal:
+        return m_objs[index].normals;
+    case UV:
+        return m_objs[index].uvs;
+    case Vertex:
+        return m_objs[index].vertices;
+    default:
+        return std::vector<float>();
+    }
+
+    return std::vector<float>();
+}
+
+size_t TDRMesh::getMeshCount(void)
+{
+    return m_objs.size();
+}
+
+bool TDRMesh::hasData(size_t index, TDRMesh::Data type)
+{
+    switch (type) {
+    case TDRMesh::Color:
+        if (m_objs[index].colors.size() > 0) {
+            return true;
+        }
+        break;
+    case TDRMesh::Index:
+        if (m_objs[index].indeces.size() > 0) {
+            return true;
+        }
+        break;
+    case TDRMesh::Normal:
+        if (m_objs[index].normals.size() > 0) {
+            return true;
+        }
+        break;
+    case TDRMesh::UV:
+        if (m_objs[index].uvs.size() > 0) {
+            return true;
+        }
+        break;
+    case TDRMesh::Vertex:
+        if (m_objs[index].vertices.size() > 0) {
+            return true;
+        }
+        break;
+    default:
+        return false;
+    }
+
+    return false;
+}
+
 bool TDRMesh::has(TDRMesh::Data type)
 {
     switch (type) {
@@ -139,6 +199,13 @@ bool TDRMesh::has(TDRMesh::Data type)
         return false;
     }
 }
+
+#ifdef TDR_DEBUG
+void TDRMesh::Test(const char* json, size_t len)
+{
+    std::cerr << "TDRMesh::Test(..) not implemented yet." << std::endl;
+}
+#endif
 
 std::vector<float> TDRMesh::parse_array(const char* json, size_t len)
 {
@@ -192,4 +259,11 @@ std::vector<float> TDRMesh::parse_array(const char* json, size_t len)
     }
 
     return ret;
+}
+
+int parse_object(struct meshobj_t* obj, const char* json, size_t len)
+{
+    if (obj == nullptr) {
+        return -1;
+    }
 }
