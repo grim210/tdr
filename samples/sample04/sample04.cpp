@@ -55,6 +55,8 @@ private:
 
 int main(int argc, char* argv[])
 {
+    SDL_Init(SDL_INIT_EVENTS);
+
     std::unique_ptr<Window> window = Window::Initialize(800, 600, false);
     if (window == nullptr) {
         std::cerr << "nullptr returned.  Aborting." << std::endl;
@@ -62,6 +64,7 @@ int main(int argc, char* argv[])
     }
     window->setClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
+    std::shared_ptr<Timer> clock = Timer::Create();
     std::shared_ptr<DirectDrawTexture> ddtex(
         new DirectDrawTexture("textures/uvtemplate.dds"));
     std::shared_ptr<Model> model = Model::Create();
@@ -72,16 +75,18 @@ int main(int argc, char* argv[])
 
     bool running = true;
     while (running) {
-        double elapsed = glfwGetTime();
+        double elapsed = clock->getTime();
 
         model->update(elapsed, camera->getView(), proj);
         window->clear();
         model->draw();
-        running = window->swap();
+        window->swap();
     }
 
     Model::Delete(model);
     Window::Destroy(window.get());
+
+    SDL_Quit();
     return 0;
 }
 

@@ -7,12 +7,12 @@ link_directories("${tdrrenderer_SOURCE_DIR}/src")
 
 add_executable(sample_03 sample03.cpp)
 target_include_directories(sample_03 PUBLIC
-    ${GLFW3_INCLUDE_DIR}
+    ${SDL2_INCLUDE_DIRS}
     ${OPENGL_INCLUDE_DIR}
 )
 
 target_link_libraries(sample_03 tdrrenderer tdrmain
-    ${GLFW3_LIBRARY}
+    ${SDL2_LIBRARIES}
     ${OPENGL_gl_LIBRARY}
     ${CMAKE_DL_LIBS}
 )

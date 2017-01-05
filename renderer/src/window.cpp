@@ -2,7 +2,9 @@
 
 void Window::Destroy(Window* win)
 {
-    glfwTerminate();
+    SDL_GL_DeleteContext(win->m_ctx);
+    SDL_DestroyWindow(win->m_window);
+    SDL_Quit();
 }
 
 std::unique_ptr<Window> Window::Initialize(int w, int h, bool fs)
@@ -11,26 +13,28 @@ std::unique_ptr<Window> Window::Initialize(int w, int h, bool fs)
     win->m_width = w;
     win->m_height = h;
 
-    if (!glfwInit()) {
+    if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
+#ifdef TDR_DEBUG
+        std::cerr << "Failed to initialize SDL2 video subsystem." << std::endl;
+#endif
         return nullptr;
     }
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-    //glfwWindowHint(GLFW_DOUBLEBUFFER, 1);
-    win->m_window = glfwCreateWindow(win->m_width, win->m_height,
-        DEFAULT_WINDOW_TITLE, nullptr, nullptr);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    win->m_window = SDL_CreateWindow(DEFAULT_WINDOW_TITLE,
+        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        win->m_width, win->m_height, SDL_WINDOW_OPENGL);
     if (win->m_window == NULL) {
         return nullptr;
     }
 
-    glfwMakeContextCurrent(win->m_window);
-    glfwSwapInterval(1);
+    win->m_ctx = SDL_GL_CreateContext(win->m_window);
     gladLoadGL();
 
     std::stringstream title;
     title << DEFAULT_WINDOW_TITLE << " -- OpenGL " << glGetString(GL_VERSION);
-    glfwSetWindowTitle(win->m_window, title.str().c_str());
+    SDL_SetWindowTitle(win->m_window, title.str().c_str());
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
@@ -43,12 +47,9 @@ void Window::clear(void)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-bool Window::swap(void)
+void Window::swap(void)
 {
-    glfwSwapBuffers(m_window);
-    glfwPollEvents();
-
-    return (!glfwWindowShouldClose(m_window));
+    SDL_GL_SwapWindow(m_window);
 }
 
 void Window::setClearColor(float r, float g, float b, float a)

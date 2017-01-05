@@ -5,4 +5,5 @@ add_library(tdrmain
     jsmn.cpp
     mainutil.cpp
     tdrmesh.cpp
+    timer.cpp
 )

@@ -6,8 +6,6 @@ set(tdr_VERSION_MAJOR 0)
 set(tdr_VERSION_MINOR 0)
 set(tdr_VERSION_PATCH 2)
 
-message("-- System Name: '${CMAKE_SYSTEM_NAME}'")
-
 # Check for C++11 compiler
 include(CheckCXXCompilerFlag)
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -34,10 +32,7 @@ find_package(OpenGL)
 # for tdrrenderer and the samples.
 if(UNIX)
     find_package(PkgConfig)
-    pkg_search_module(GLFW REQUIRED glfw3)
-    set(GLFW3_LIBRARY_DIR "${GLFW_LIBRARY_DIRS}")
-    set(GLFW3_LIBRARY "${GLFW_LIBRARIES}")
-    set(GLFW3_INCLUDE_DIR "${GLFW_INCLUDE_DIRS}")
+    pkg_search_module(SDL2 REQUIRED sdl2)
 elseif(MSYS)
     if(ARCH_WIN32)
         set(GLFW3_LIBRARY_DIR "-L/mingw32/lib")

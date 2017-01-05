@@ -51,6 +51,7 @@ int main(int argc, char* argv[])
     }
     window->setClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
+    std::shared_ptr<Timer> clock = Timer::Create();
     std::shared_ptr<DirectDrawTexture> ddtex(
         new DirectDrawTexture("textures/uvtemplate.dds"));
     std::shared_ptr<Cube> cube = Cube::Create(ddtex);
@@ -58,14 +59,16 @@ int main(int argc, char* argv[])
 
     glm::mat4 proj = glm::perspective(45.0f, 800.0f / 600.0f, 0.1f, 100.0f);
 
+    clock->start();
+
     bool running = true;
     while (running) {
-        double elapsed = glfwGetTime();
+        double elapsed = clock->getTime();
 
         cube->update(elapsed, camera->getView(), proj);
         window->clear();
         cube->draw();
-        running = window->swap();
+        window->swap();
     }
 
     Cube::Destroy(cube.get());
@@ -77,7 +80,6 @@ std::shared_ptr<Cube> Cube::Create(std::shared_ptr<Texture> tex)
 {
     std::shared_ptr<Cube> box(new Cube());
     box->m_program = ShaderProgram::Create();
-    box->m_mesh = TDRMesh::Cube();
 
     std::string vshader = load_text_file("./shaders/vshader.vs");
     std::string fshader = load_text_file("./shaders/fshader.fs");
