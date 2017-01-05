@@ -8,6 +8,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <SDL2/SDL.h>
+
 #include <tdrmain.h>
 #include <tdrrenderer.h>
 
@@ -75,6 +77,13 @@ int main(int argc, char* argv[])
 
     bool running = true;
     while (running) {
+        SDL_Event ev;
+        while (SDL_PollEvent(&ev)) {
+            if (ev.type == SDL_QUIT) {
+                running = false;
+            }
+        }
+
         double elapsed = clock->getTime();
 
         model->update(elapsed, camera->getView(), proj);
