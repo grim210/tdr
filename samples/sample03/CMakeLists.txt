@@ -19,3 +19,4 @@ target_link_libraries(sample_03 tdrrenderer tdrmain
 
 file(COPY shaders DESTINATION .)
 file(COPY textures DESTINATION .)
+file(COPY cube.json DESTINATION .)

@@ -1,6 +1,10 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#ifdef TDR_DEBUG
+#include <iostream>
+#endif
+
 #include <memory>
 #include <sstream>
 

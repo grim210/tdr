@@ -28,6 +28,9 @@ option(ARCH_WIN32 "Target 32-bit libraries." TRUE)
 # Find OpenGL, necessary for tdrrenderer, and the samples
 find_package(OpenGL)
 
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Werror -DTDR_DEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
+
 # Find GLFW3.. which seems to be pretty frustrating.  Necessary
 # for tdrrenderer and the samples.
 if(UNIX)

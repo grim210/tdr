@@ -93,6 +93,7 @@ std::shared_ptr<TDRMesh> TDRMesh::Load(const char* buffer, size_t len)
 
 std::vector<float> TDRMesh::get(TDRMesh::Data type)
 {
+    std::vector<float> temp;
     switch (type) {
     case TDRMesh::Color:
         return m_colordata;
@@ -106,6 +107,8 @@ std::vector<float> TDRMesh::get(TDRMesh::Data type)
     case TDRMesh::Vertex:
         return m_vertexdata;
         break;
+    default:
+        return temp;
     }
 }
 
