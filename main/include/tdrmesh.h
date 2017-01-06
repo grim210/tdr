@@ -7,6 +7,7 @@
 
 #include <cstring>
 #include <memory>
+#include <stack>
 #include <string>
 #include <vector>
 
@@ -49,11 +50,29 @@ private:
 
         std::string vertex_shader;
         std::string fragment_shader;
+        std::string geometry_shader;
+
         std::vector<float> colors;
         std::vector<float> indeces;
         std::vector<float> normals;
         std::vector<float> uvs;
         std::vector<float> vertices;
+    };
+
+    enum tdrmesh_stack_e {
+        // Array types
+        TDRMESH_STACK_VERTICES  = 0,
+        TDRMESH_STACK_UVS       = 1,
+        TDRMESH_STACK_COLORS    = 2,
+        TDRMESH_STACK_NORMALS   = 3,
+        TDRMESH_STACK_INDICES   = 4,
+
+        // String types
+        TDRMESH_STACK_OBJNAME   = 10,
+        TDRMESH_STACK_VSHADER   = 11,
+        TDRMESH_STACK_FSHADER   = 12,
+        TDRMESH_STACK_GSHADER   = 13,
+        TDRMESH_STACK_TEXTURE   = 14
     };
 
     std::vector<struct meshobj_t> m_objs;

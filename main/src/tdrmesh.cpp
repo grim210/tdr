@@ -1,11 +1,97 @@
 #include <tdrmesh.h>
 
-void TDRMesh::Delete(std::shared_ptr<TDRMesh> mesh)
-{
-
-}
+void TDRMesh::Delete(std::shared_ptr<TDRMesh> mesh) { }
 
 std::shared_ptr<TDRMesh> TDRMesh::Load(const char* buffer, size_t len)
+{
+    std::shared_ptr<TDRMesh> ret(new TDRMesh());
+
+    jsmn_parser parser;
+    jsmn_init(&parser);
+    int count = jsmn_parse(&parser, buffer, len, nullptr, 0);
+
+    std::vector<jsmntok_t> tokens;
+    tokens.resize(count);
+
+    jsmn_init(&parser);
+    count = jsmn_parse(&parser, buffer, len, tokens.data(), tokens.size());
+
+    char type = '\0';
+    char buff[TDRMESH_BUFF_MAXLEN];
+
+    for (size_t i = 0; i < tokens.size(); i++) {
+        int len = tokens[i].end - tokens[i].start + 1;
+        const char* tjson = nullptr;
+
+        switch (tokens[i].type) {
+        case JSMN_ARRAY:
+            tjson = buffer + tokens[i].start;
+            switch (type) {
+            case 'u':
+                ret->m_uvdata = ret->parse_array(tjson, len);
+                break;
+            case 'v':
+                ret->m_vertexdata = ret->parse_array(tjson, len);
+                break;
+            case 'i':
+                ret->m_indexdata = ret->parse_array(tjson, len);
+                break;
+            case 'n':
+                ret->m_normals = ret->parse_array(tjson, len);
+                break;
+            case 'c':
+                ret->m_colordata = ret->parse_array(tjson, len);
+                break;
+            default:
+#ifdef TDR_DEBUG
+                std::cerr << "Unrecognized character in TDRMesh::Load.  ";
+                std::cerr << "Skipping..." << std::endl;
+#endif
+                break;
+            }
+            break;
+        case JSMN_STRING:
+            memset(buff, 0, TDRMESH_BUFF_MAXLEN);
+            tjson = buffer + tokens[i].start;
+            snprintf(buff, len, "%s", tjson);
+#ifdef TDR_DEBUG
+            std::cerr << "Found string: " << buff << std::endl;
+#endif
+
+            if (strncmp(buff, "vertices", strlen("vertices")) == 0) {
+                type = 'v';
+            } else if (strncmp(buff, "uvs", strlen("uvs")) == 0) {
+                type = 'u';
+            } else if (strncmp(buff, "colors", strlen("colors")) == 0) {
+                type = 'c';
+            } else if (strncmp(buff, "normals", strlen("normals")) == 0) {
+                type = 'n';
+            } else if (strncmp(buff, "indices", strlen("indices")) == 0) {
+                type = 'i';
+            } else {
+                type = '\0';
+            }
+            break;
+        case JSMN_PRIMITIVE:
+        case JSMN_OBJECT:
+#ifdef TDR_DEBUG
+            std::cerr << "Found primitive or object.  Skipping.";
+            std::cerr << std::endl;
+#endif
+            break;
+        default:
+#ifdef TDR_DEBUG
+            std::cerr << "Unrecognized JSON token found.  Skipping.";
+            std::cerr << std::endl;
+#endif
+            break;
+        }
+    }
+
+    return ret;
+}
+
+std::shared_ptr<TDRMesh> TDRMesh::Load2(const char* buffer, size_t len)
 {
     std::shared_ptr<TDRMesh> ret(new TDRMesh());
 
@@ -261,9 +347,131 @@ std::vector<float> TDRMesh::parse_array(const char* json, size_t len)
     return ret;
 }
 
-int parse_object(struct meshobj_t* obj, const char* json, size_t len)
+int TDRMesh::parse_object(struct meshobj_t* obj, const char* json, size_t len)
 {
     if (obj == nullptr) {
         return -1;
     }
+
+    char buff[TDRMESH_BUFF_MAXLEN];
+    jsmn_parser parser;
+    jsmn_init(&parser);
+
+    int count = jsmn_parse(&parser, json, len, nullptr, 0);
+    std::vector<jsmntok_t> tokens;
+    tokens.resize(count);
+
+    std::stack<tdrmesh_stack_e> stack;
+    tdrmesh_stack_e etype;
+
+    for (size_t i = 0; i < tokens.size(); i++) {
+        int len = tokens[i].end - tokens[i].start + 1;
+        const char* tjson = nullptr;
+
+        switch (tokens[i].type) {
+        case JSMN_ARRAY:
+            tjson = buff + tokens[i].start;
+            if (stack.empty()) {
+#ifdef TDR_DEBUG
+                std::cerr << "Stack is empty!  Skipping array.." << std::endl;
+#endif
+                continue;
+            }
+
+            etype = stack.top();
+            stack.pop();
+
+            switch (etype) {
+            case TDRMESH_STACK_VERTICES:
+                obj->vertices = parse_array(tjson, len);
+                break;
+            case TDRMESH_STACK_UVS:
+                obj->uvs = parse_array(tjson, len);
+                break;
+            case TDRMESH_STACK_COLORS:
+                obj->colors = parse_array(tjson, len);
+                break;
+            case TDRMESH_STACK_NORMALS:
+                obj->normals = parse_array(tjson, len);
+                break;
+            case TDRMESH_STACK_INDICES:
+                obj->indeces = parse_array(tjson, len);
+                break;
+            case TDRMESH_STACK_TEXTURE:
+#ifdef TDR_DEBUG
+                std::cerr << "Texture parsing not implemented yet..";
+                std::cerr << std::endl;
+#endif
+                break;
+            default:
+#ifdef TDR_DEBUG
+                std::cerr << "Unknown array for type " << etype << ": ";
+                std::cerr << "Skipping array..." << std::endl;
+#endif
+                break;
+            }
+            break;
+        case JSMN_STRING:
+            memset(buff, 0, TDRMESH_BUFF_MAXLEN);
+            tjson = json + tokens[i].start;
+            snprintf(buff, len, "%s", tjson);
+            if (strncmp(buff, "vshader", strlen("vshader")) == 0) {
+                stack.push(TDRMESH_STACK_VSHADER);
+            } else if (strncmp(buff, "fshader", strlen("fshader")) == 0) {
+                stack.push(TDRMESH_STACK_FSHADER);
+            } else if (strncmp(buff, "gshader", strlen("gshader")) == 0) {
+                stack.push(TDRMESH_STACK_GSHADER);
+            } else if (strncmp(buff, "texture", strlen("texture")) == 0) {
+                stack.push(TDRMESH_STACK_TEXTURE);
+            } else {
+                if (stack.empty()) {
+#ifdef TDR_DEBUG
+                    std::cerr << "Found invalid identifier string: '";
+                    std::cerr << buff << std::endl;
+
+#endif
+                    continue;
+                }
+
+                etype = stack.top();
+                stack.pop();
+
+                switch (etype) {
+                case TDRMESH_STACK_VSHADER:
+                    obj->vertex_shader = buff;
+                    break;
+                case TDRMESH_STACK_FSHADER:
+                    obj->fragment_shader = buff;
+                    break;
+                case TDRMESH_STACK_GSHADER:
+                    obj->geometry_shader = buff;
+                    break;
+                default:
+#ifdef TDR_DEBUG
+                    std::cerr << "Unknown stack string variable: ";
+                    std::cerr << etype << std::endl;
+#endif
+                    break;
+                }
+            }
+            break;
+        case JSMN_PRIMITIVE:
+#ifdef TDR_DEBUG
+            std::cerr << "Found JSON primitive.  Skipping." << std::endl;
+#endif
+            break;
+        case JSMN_OBJECT:
+#ifdef TDR_DEBUG
+            std::cerr << "Found JSON object.  Skipping." << std::endl;
+#endif
+            break;
+        default:
+#ifdef TDR_DEBUG
+            std::cerr << "Unrecognized JSON Token found.  Skipping.";
+            std::cerr << std::endl;
+#endif
+        }
+    }
+
+    return 0;
 }
