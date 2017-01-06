@@ -22,31 +22,27 @@ else()
     message(FATAL_ERROR "!! Error: Failed to find C++11 capable compiler.")
 endif()
 
-# There needs to be a better way of doing this..
-option(ARCH_WIN32 "Target 32-bit libraries." TRUE)
-
 # Find OpenGL, necessary for tdrrenderer, and the samples
 find_package(OpenGL)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Werror -DTDR_DEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
-# Find GLFW3.. which seems to be pretty frustrating.  Necessary
-# for tdrrenderer and the samples.
-if(UNIX)
-    find_package(PkgConfig)
-    pkg_search_module(SDL2 REQUIRED sdl2)
-elseif(MSYS)
-    if(ARCH_WIN32)
-        set(GLFW3_LIBRARY_DIR "-L/mingw32/lib")
-        set(GLFW3_INCLUDE_DIR "-I/mingw32/include")
-        set(GLFW3_LIBRARY "-lglfw3 -lgdi32")
-    else()
-        set(GLFW3_LIBRARY_DIR "-L/mingw64/lib")
-        set(GLFW3_INCLUDE_DIR "-I/mingw64/include")
-        set(GLFW3_LIBRARY "-lglfw -lgdi32")
-    endif()
+find_package(PkgConfig)
+pkg_search_module(SDL2 REQUIRED sdl2)
+
+if(SDL2_FOUND)
+    message("SDL2 Libraries: ${SDL2_LIBRARIES}")
+    message("SDL2 Library Dirs: ${SDL2_LIBRARY_DIRS}")
+    message("SDL2 LDFLAGS: ${SDL2_LDFLAGS}")
+    message("SDL2 LDFLAGS Other: ${SDL2_LDFLAGS_OTHER}")
+    message("SDL2 Include Dirs: ${SDL2_INCLUDE_DIRS}")
+    message("SDL2 CFLAGS: ${SDL2_CFLAGS}")
+    message("SDL2 CFLAGS Other: ${SDL2_CLFAGS_OTHER}")
+else()
+    message(FATAL_ERROR "Failed to find SDL2!")
 endif()
+
 
 # There needs to be a way to determine if the dependencies are satisified
 # or not and then conditionally include that stuff.

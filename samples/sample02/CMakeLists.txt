@@ -8,6 +8,6 @@ link_directories("${tdrrenderer_SOURCE_DIR}/src")
 link_directories("${SDL2_LIBRARY_DIRS}")
 
 add_executable(sample_02 sample02.cpp)
-target_link_libraries(sample_02 tdrmain tdrrenderer)
+target_link_libraries(sample_02 tdrmain tdrrenderer ${SDL2_LIBRARIES})
 
 file(COPY cube.json DESTINATION .)
