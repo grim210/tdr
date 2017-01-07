@@ -9,6 +9,7 @@
 #include <memory>
 #include <stack>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include <jsmn.h>
@@ -24,7 +25,7 @@ public:
         UV,
         Vertex
     };
-    TDRMesh(void) { };
+    TDRMesh(void);
     virtual ~TDRMesh(void) { };
     static void Delete(std::shared_ptr<TDRMesh> mesh);
     static std::shared_ptr<TDRMesh> Load(const char* buff, size_t len);
@@ -59,20 +60,23 @@ private:
         std::vector<float> vertices;
     };
 
-    enum tdrmesh_stack_e {
+    enum tdrmesh_types_e {
         // Array types
-        TDRMESH_STACK_VERTICES  = 0,
-        TDRMESH_STACK_UVS       = 1,
-        TDRMESH_STACK_COLORS    = 2,
-        TDRMESH_STACK_NORMALS   = 3,
-        TDRMESH_STACK_INDICES   = 4,
+        TDRMESH_VERTICES,
+        TDRMESH_UVS,
+        TDRMESH_COLORS,
+        TDRMESH_NORMALS,
+        TDRMESH_INDICES,
 
-        // String types
-        TDRMESH_STACK_OBJNAME   = 10,
-        TDRMESH_STACK_VSHADER   = 11,
-        TDRMESH_STACK_FSHADER   = 12,
-        TDRMESH_STACK_GSHADER   = 13,
-        TDRMESH_STACK_TEXTURE   = 14
+        // Texture types.. this could expand later
+        TDRMESH_VSHADER,
+        TDRMESH_FSHADER,
+        TDRMESH_GSHADER,
+
+        // Other identifiers
+        TDRMESH_TEXTURE,
+
+        TDRMESH_UNKNOWN
     };
 
     std::vector<struct meshobj_t> m_objs;
@@ -82,8 +86,13 @@ private:
     std::vector<float> m_uvdata;
     std::vector<float> m_vertexdata;
 
-    std::vector<float> parse_array(const char* json, size_t len);
-    int parse_object(struct meshobj_t* obj, const char* json, size_t len);
+    // stores string representations of the tdrmesh_stack_e 
+    std::vector<std::string> m_keywords;
+
+    std::vector<float> parse_array(const char* json, int len);
+    int parse_object(struct meshobj_t* obj, const char* json, int len);
+    tdrmesh_types_e parse_identifier(const char* str, size_t len);
+    size_t fast_forward(std::vector<jsmntok_t> tokens, size_t index);
 };
 
 #endif  /* TDRMAIN_TDRMESH_H */
