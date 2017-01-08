@@ -89,7 +89,7 @@ private:
     // stores string representations of the tdrmesh_stack_e 
     std::vector<std::string> m_keywords;
 
-    std::vector<float> parse_array(const char* json, int len);
+    std::vector<float> parse_float_array(const char* json, int len);
     int parse_object(struct meshobj_t* obj, const char* json, int len);
     tdrmesh_types_e parse_identifier(const char* str, size_t len);
     size_t fast_forward(std::vector<jsmntok_t> tokens, size_t index);
