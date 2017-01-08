@@ -18,26 +18,38 @@
 
 class TDRMesh {
 public:
-    enum Data {
+    enum FloatData {
         Color,
         Index,
         Normal,
         UV,
         Vertex
     };
+
+    enum StringData {
+        MeshName,
+        MeshJSON,
+        TextureType,
+        TexturePath,
+        FragmentShaderPath,
+        GeometryShaderPath,
+        VertexShaderPath
+    };
+
     TDRMesh(void);
     virtual ~TDRMesh(void) { };
     static void Delete(std::shared_ptr<TDRMesh> mesh);
     static std::shared_ptr<TDRMesh> Load(const char* buff, size_t len);
     static std::shared_ptr<TDRMesh> Load2(const char* buff, size_t len);
 
-    std::vector<float> get(Data type);
-    bool has(Data type);
+    std::vector<float> get(FloatData type);
+    bool has(FloatData type);
 
     size_t getMeshCount(void);
-    std::vector<float> getData(size_t index, Data type);
-    std::string getMeshName(size_t index);
-    bool hasData(size_t index, Data type);
+    std::vector<float> getData(size_t index, FloatData type);
+    std::string getData(size_t index, StringData type);
+    bool hasData(size_t index, FloatData type);
+    bool hasData(size_t index, StringData type);
 
 #ifdef TDR_DEBUG
     /* Call this from a debug build to get a very verbose output to verify
@@ -52,6 +64,8 @@ private:
         std::string vertex_shader;
         std::string fragment_shader;
         std::string geometry_shader;
+        std::string texture_path;
+        std::string texture_type;
 
         std::vector<float> colors;
         std::vector<float> indeces;
@@ -75,7 +89,6 @@ private:
 
         // Other identifiers
         TDRMESH_TEXTURE,
-
         TDRMESH_UNKNOWN
     };
 
@@ -90,6 +103,7 @@ private:
     std::vector<std::string> m_keywords;
 
     std::vector<float> parse_float_array(const char* json, int len);
+    std::vector<std::string> parse_string_array(const char* json, int len);
     int parse_object(struct meshobj_t* obj, const char* json, int len);
     tdrmesh_types_e parse_identifier(const char* str, size_t len);
     size_t fast_forward(std::vector<jsmntok_t> tokens, size_t index);

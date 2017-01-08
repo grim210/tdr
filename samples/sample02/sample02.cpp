@@ -2,8 +2,6 @@
 #include <tdrmain.h>
 #include <tdrrenderer.h>
 
-#define BUFF_LEN        (256)
-
 int main(int argc, char* argv[])
 {
     std::string json = load_text_file("./cube.json");
@@ -18,6 +16,13 @@ int main(int argc, char* argv[])
     std::cout << "====================" << std::endl;
 
     std::shared_ptr<TDRMesh> mesh = TDRMesh::Load2(json.c_str(), json.length());
+
+    size_t count = mesh->getMeshCount();
+    std::cout << "Found " << count << " meshes:" << std::endl;
+    for (size_t i = 0; i < count; i++) {
+        std::cout << "\t- " << mesh->getData(i, TDRMesh::MeshName);
+        std::cout << std::endl;
+    }
 
     return 0;
 }

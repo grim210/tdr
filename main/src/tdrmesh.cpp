@@ -108,7 +108,7 @@ std::shared_ptr<TDRMesh> TDRMesh::Load(const char* buffer, size_t len)
 }
 
 /* XXX: Remove */
-std::vector<float> TDRMesh::get(TDRMesh::Data type)
+std::vector<float> TDRMesh::get(TDRMesh::FloatData type)
 {
     std::vector<float> temp;
     switch (type) {
@@ -130,7 +130,7 @@ std::vector<float> TDRMesh::get(TDRMesh::Data type)
 }
 
 /* XXX: Remove */
-bool TDRMesh::has(TDRMesh::Data type)
+bool TDRMesh::has(TDRMesh::FloatData type)
 {
     switch (type) {
     case TDRMesh::Color:
@@ -158,7 +158,7 @@ bool TDRMesh::has(TDRMesh::Data type)
     }
 }
 
-std::vector<float> TDRMesh::getData(size_t index, Data type)
+std::vector<float> TDRMesh::getData(size_t index, FloatData type)
 {
     switch (type) {
     case Color:
@@ -176,9 +176,38 @@ std::vector<float> TDRMesh::getData(size_t index, Data type)
         std::cerr << "TDRMesh::getData(): Requested invalid data type.";
         std::cerr << std::endl;
 #endif
+        break;
     }
 
     return std::vector<float>();
+}
+
+std::string TDRMesh::getData(size_t index, StringData type)
+{
+    switch (type) {
+    case MeshName:
+        return m_objs[index].name;
+    case MeshJSON:
+        return m_objs[index].json;
+    case TextureType:
+        return m_objs[index].texture_type;
+    case TexturePath:
+        return m_objs[index].texture_path;
+    case FragmentShaderPath:
+        return m_objs[index].fragment_shader;
+    case GeometryShaderPath:
+        return m_objs[index].geometry_shader;
+    case VertexShaderPath:
+        return m_objs[index].vertex_shader;
+    default:
+#ifdef TDR_DEBUG
+        std::cerr << "TDRMesh::getData(): Requested invalid data type.";
+        std::cerr << std::endl;
+#endif
+        break;
+    }
+
+    return std::string();
 }
 
 /* In this function, we focus on loading a Mesh from the standpoint of
@@ -270,7 +299,7 @@ std::shared_ptr<TDRMesh> TDRMesh::Load2(const char* buffer, size_t len)
                 std::cerr << "TDRMesh::Load2(): Cannot fast forward.  ";
                 std::cerr << "Returning.." << std::endl;
 #endif
-                return ret;
+                break;
             } else {
                 i = ret->fast_forward(tokens, i);
                 continue;
@@ -292,6 +321,13 @@ std::shared_ptr<TDRMesh> TDRMesh::Load2(const char* buffer, size_t len)
         i++;
     }
 
+#ifdef TDR_DEBUG
+    std::cerr << "TDRMesh::Load2(): successfully parsed ";
+    std::cerr << ret->m_objs.size() << " objects:" << std::endl;
+    for (size_t j = 0; j < ret->m_objs.size(); j++) {
+        std::cerr << "\t- " << ret->m_objs[j].name << std::endl;
+    }
+#endif
     return ret;
 }
 
@@ -300,7 +336,7 @@ size_t TDRMesh::getMeshCount(void)
     return m_objs.size();
 }
 
-bool TDRMesh::hasData(size_t index, TDRMesh::Data type)
+bool TDRMesh::hasData(size_t index, TDRMesh::FloatData type)
 {
     switch (type) {
     case TDRMesh::Color:
@@ -335,6 +371,33 @@ bool TDRMesh::hasData(size_t index, TDRMesh::Data type)
     return false;
 }
 
+bool TDRMesh::hasData(size_t index, TDRMesh::StringData type)
+{
+    switch (type) {
+    case MeshName:
+        return !m_objs[index].name.empty();
+    case MeshJSON:
+        return !m_objs[index].json.empty();
+    case TextureType:
+        return !m_objs[index].texture_type.empty();
+    case TexturePath:
+        return !m_objs[index].texture_path.empty();
+    case FragmentShaderPath:
+        return !m_objs[index].fragment_shader.empty();
+    case GeometryShaderPath:
+        return !m_objs[index].geometry_shader.empty();
+    case VertexShaderPath:
+        return !m_objs[index].vertex_shader.empty();
+    default:
+#ifdef TDR_DEBUG
+        std::cerr << "TDRMesh::getData(): Requested invalid data type.";
+        std::cerr << std::endl;
+#endif
+        break;
+    }
+
+    return false;
+}
 
 #ifdef TDR_DEBUG
 void TDRMesh::Test(const char* json, size_t len)
@@ -431,6 +494,107 @@ std::vector<float> TDRMesh::parse_float_array(const char* json, int len)
     return ret;
 }
 
+std::vector<std::string> TDRMesh::parse_string_array(const char* json, int len)
+{
+    int count;
+    char buff[TDRMESH_BUFF_MAXLEN];
+    char str[len + 1];
+    std::vector<std::string> ret;
+
+    if (json == NULL || len <= 0) {
+#ifdef TDR_DEBUG
+        std::cerr << "TDRMesh::parse_float_array(): Invalid parameters ";
+        std::cerr << "passed.  Returning empty vector." << std::endl;
+#endif
+        return ret;
+    }
+
+    /* First, we clear our buffers, and then copy the parameter string into
+    * a seperate object so we don't accidently trample it. */
+    memset(buff, 0, TDRMESH_BUFF_MAXLEN);
+    memset(str, 0, len + 1);
+    snprintf(str, len, "%s", json);
+
+#ifdef TDR_DEBUG
+    /* XXX: To verbose? */
+    std::cerr << "TDRMesh::parse_string_array() --- Attempting to parse:";
+    std::cerr << std::endl << str << std::endl;
+    std::cerr << "TDRMesh::parse_string_array() ------------------------";
+    std::cerr << std::endl;
+#endif
+
+    /* Parse the object initially just to get a token count. */
+    jsmn_parser parser;
+    jsmn_init(&parser);
+    count = jsmn_parse(&parser, str, len, nullptr, 0);
+
+    /* Resize our token buffer to hold everything we need to parse. */
+    std::vector<jsmntok_t> tokens;
+    tokens.resize(count);
+
+    /* Actually parse the string this time, but still check to see if
+    * something got dorked up in the process.. You never know. */
+    jsmn_init(&parser);
+    if (count != jsmn_parse(&parser, str, len, tokens.data(),
+        tokens.size())) {
+#ifdef TDR_DEBUG
+        std::cerr << "TDRMesh::parse_string_array(): Token size mismatch;";
+        std::cerr << "failed to parse array." << std::endl;
+#endif
+        return ret;
+    }
+
+    /* Check if the root token is the array; that's what we're expecting. */
+    if (tokens[0].type != JSMN_ARRAY) {
+#ifdef TDR_DEBUG
+        std::cerr << "TDRMesh::parse_string_array(): Malformed array. ";
+        std::cerr << std::endl;
+#endif
+        return ret;
+    }
+
+    for (size_t i = 1; i < tokens.size(); i++) {
+        if (tokens[i].type != JSMN_STRING) {
+#ifdef TDR_DEBUG
+            std::cerr << "TDRMesh::parse_string_array(): Failed to parse ";
+            std::cerr << "array.  Expecting string." << std::endl;
+#endif
+            return ret;
+        }
+
+        if ((tokens[i].end - tokens[i].start + 1) >= TDRMESH_BUFF_MAXLEN) {
+#ifdef TDR_DEBUG
+            std::cerr << "TDRMesh::parse_string_array(): attempting to parse";
+            std::cerr << " string that is too long for buffer.  Aborting.";
+            std::cerr << std::endl;
+#endif
+            return ret;
+        }
+
+        memset(buff, 0, TDRMESH_BUFF_MAXLEN);
+        snprintf(buff, tokens[i].end - tokens[i].start + 1, "%s",
+            str + tokens[i].start);
+
+        std::string temp(buff);
+        ret.push_back(temp);
+    }
+
+#ifdef TDR_DEBUG
+    std::cerr << "TDRMesh::parse_string_array(): Parsed " << ret.size();
+    std::cerr << " strings: {";
+    for (size_t i = 0; i < ret.size(); i++) {
+        if (i == ret.size() - 1) {
+            std::cerr << ret[i] << "}" << std::endl;
+            continue;
+        }
+
+        std::cerr << ret[i] << ",";
+    }
+#endif
+
+    return ret;
+}
+
 int TDRMesh::parse_object(struct meshobj_t* obj, const char* json, int len)
 {
     if (obj == nullptr) {
@@ -465,12 +629,15 @@ int TDRMesh::parse_object(struct meshobj_t* obj, const char* json, int len)
     std::stack<tdrmesh_types_e> tstack;
     tdrmesh_types_e etype;
 
-    for (size_t i = 1; i < tokens.size(); i++) {
+    size_t i = 1;
+    while (i < tokens.size()) {
+//    for (size_t i = 1; i < tokens.size(); i++) {
         int slen = tokens[i].end - tokens[i].start + 1;
         const char* tjson = json + tokens[i].start;
 
         if (tokens[i].type == JSMN_PRIMITIVE ||
             tokens[i].type == JSMN_UNDEFINED) {
+            i++;
             continue;
         }
 
@@ -492,16 +659,22 @@ int TDRMesh::parse_object(struct meshobj_t* obj, const char* json, int len)
             }
 
             if (tstack.top() == TDRMESH_TEXTURE) {
+                std::vector<std::string> textures;
+                textures = parse_string_array(tjson, slen);
+                if (textures.size() > 2) {
 #ifdef TDR_DEBUG
-                std::cerr << "TDRMesh::parse_object(): Not parsing ";
-                std::cerr << "texture.  Going from token ";
-                std::cerr << i << " to ";
+                    std::cerr << "TDRMesh::parse_object(): Only a single ";
+                    std::cerr << "texture and type are supported per ";
+                    std::cerr << "object.  Aborting" << std::endl;
 #endif
-                i = fast_forward(tokens, i) - 1;
-#ifdef TDR_DEBUG
-                std::cerr << i << "." << std::endl;
-#endif
+                    return 1;
+                }
+
+                obj->texture_path = textures[0];
+                obj->texture_type = textures[1];
                 tstack.pop();
+
+                i = fast_forward(tokens, i);
                 continue;
             }
 
@@ -531,7 +704,8 @@ int TDRMesh::parse_object(struct meshobj_t* obj, const char* json, int len)
 
             tstack.pop();
             if (fast_forward(tokens, i) != 0) {
-                i = fast_forward(tokens, i) - 1;
+                i = fast_forward(tokens, i);
+                continue;
             }
         }
 
@@ -552,6 +726,7 @@ int TDRMesh::parse_object(struct meshobj_t* obj, const char* json, int len)
                 std::cerr << m_keywords[etype] << std::endl;
 #endif
                 tstack.push(etype);
+                i++;
                 continue;
             }
 
@@ -579,6 +754,8 @@ int TDRMesh::parse_object(struct meshobj_t* obj, const char* json, int len)
 #endif
             tstack.pop();
         }
+
+        i++;
     }
 
     return 0;
