@@ -2,6 +2,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <sstream>
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -67,10 +68,7 @@ int main(int argc, char* argv[])
     window->setClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
     std::shared_ptr<Timer> clock = Timer::Create();
-    std::shared_ptr<DirectDrawTexture> ddtex(
-        new DirectDrawTexture("textures/uvtemplate.dds"));
     std::shared_ptr<Model> model = Model::Create();
-    model->addTexture(ddtex);
     std::shared_ptr<Camera> camera = Camera::Create(model);
 
     glm::mat4 proj = glm::perspective(45.0f, 800.0f / 600.0f, 0.1f, 100.0f);
@@ -102,19 +100,27 @@ int main(int argc, char* argv[])
 std::shared_ptr<Model> Model::Create(void)
 {
     std::shared_ptr<Model> model(new Model());
-
-    std::string vshader = load_text_file("./shaders/vshader.vs");
-    std::string fshader = load_text_file("./shaders/fshader.fs");
     std::string modeldata = load_text_file("./cube.json");
 
-#ifdef TDR_DEBUG
-    std::cout << "Vertex Shader Code" << std::endl << vshader << std::endl;
-    std::cout << "Fragment Shader Code" << std::endl << fshader << std::endl;
-#endif
+    model->m_mesh = TDRMesh::Load2(modeldata.c_str(), modeldata.length());
+    std::stringstream vsp;
+    vsp << "./shaders/" << model->m_mesh->getData(0,
+        TDRMesh::VertexShaderPath);
+    std::string vshader = load_text_file(vsp.str());
+
+    std::stringstream fsp;
+    fsp << "./shaders/" << model->m_mesh->getData(0,
+        TDRMesh::FragmentShaderPath);
+    std::string fshader = load_text_file(fsp.str());
+
+    std::stringstream texp;
+    texp << "./textures/" << model->m_mesh->getData(0,
+        TDRMesh::TexturePath);
+
+    std::shared_ptr<DirectDrawTexture> ddt(new DirectDrawTexture(texp.str()));
+    model->m_texture = std::shared_ptr<GLTexture>(GLTexture::Create(ddt));
 
     model->m_program = ShaderProgram::Create();
-    model->m_mesh = TDRMesh::Load(modeldata.c_str(), modeldata.length());
-
     model->m_program->attachShader(GL_VERTEX_SHADER, vshader);
     model->m_program->attachShader(GL_FRAGMENT_SHADER, fshader);
     if (!model->m_program->link()) {
