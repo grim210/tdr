@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title>TDR - TDRMesh Specification</title>
+  </head>
+  <body>
+    <h1>TDRMesh Specification</h1>
+    <h2>Root Object</h2>
+    <p>Every TDRMesh JSON file is an object.  When you open the file, the 
+    first thing you should see is an opening curly brace.  Everything
+    contained within those two braces are part of the same TDRMesh object.</p>
+    <h2>Sub-Objects</h2>
+    <p>From the root object, you will have other objects identifed by strings.
+    As an example, you may see:
+<pre>
+{
+    "example_object": {
+        ...
+    },
+    ...,
+    ...,
+}
+</pre>
+    which would identify that sub-object by the name "example_object".
+    That mesh object can contain whatever data is relevant to that structure.
+    However, all data must be provided with a valid identifer.</p>
+    <ul>
+      <li>Textures: Paths of where to find textures, and what type of format
+        that the texture is stored as.</li>
+      <li>Shaders: Paths that point to where to find various shaders used for
+        rendering the object.</li>
+      <li>Primitives: Typically raw float data associated with vertex or
+        UV data, as an example.</li>
+    </ul>
+    <h3>Textures</h3>
+    <p></p>
+    <h3>Shaders</h3>
+    <h3>Primitives</h3>
+  </body>
+</html>
