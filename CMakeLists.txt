@@ -2,14 +2,18 @@ cmake_minimum_required(VERSION 3.0)
 project(tdr CXX)
 enable_language(C)
 
+# Set version
 set(tdr_VERSION_MAJOR 0)
 set(tdr_VERSION_MINOR 0)
 set(tdr_VERSION_PATCH 2)
+set(tdr_VERSION_STRING "0.0.2")
 
 option(BUILD_SYSTEM_DEBUG "Output debug info from CMake as it configure."
     FALSE)
 
 # Check for C++11 compiler
+# TODO: This should be more robust.  The most popular compilers are GNU G++,
+# Clang and Visual C++.  We should support these compilers at the very least.
 include(CheckCXXCompilerFlag)
 if(CMAKE_COMPILER_IS_GNUCXX)
     CHECK_CXX_COMPILER_FLAG(-std=c++11 SUPPORTS_CXX11)
@@ -20,17 +24,17 @@ else()
 endif()
 
 if(SUPPORTS_CXX11)
+    # This is a GNU-ism..  Potentially works for Clang as well.
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 else()
     message(FATAL_ERROR "!! Error: Failed to find C++11 capable compiler.")
 endif()
 
-# Find OpenGL, necessary for tdrrenderer, and the samples
-find_package(OpenGL)
-
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Werror -DTDR_DEBUG")
+set(CMAKE_CXX_FLAGS_DEBUG
+    "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Werror -DTDR_DEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
+find_package(OpenGL)
 find_package(PkgConfig)
 pkg_search_module(SDL2 REQUIRED sdl2)
 
@@ -47,7 +51,6 @@ else()
         message("SDL2 CFLAGS Other: ${SDL2_CLFAGS_OTHER}")
     endif()
 endif()
-
 
 # There needs to be a way to determine if the dependencies are satisified
 # or not and then conditionally include that stuff.
