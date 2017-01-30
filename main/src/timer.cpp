@@ -26,6 +26,10 @@ std::shared_ptr<Timer> Timer::Create(void)
 double Timer::getTime(void)
 {
     if (!m_running) {
+#ifdef TDR_DEBUG
+        std::cerr << "Timer::getTime(): timer isn't running.  Returning 0.";
+        std::cerr << std::endl;
+#endif
         return 0.0;
     }
 
