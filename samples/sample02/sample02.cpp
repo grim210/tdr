@@ -1,6 +1,5 @@
 #include <iostream>
 #include <tdrmain.h>
-#include <tdrrenderer.h>
 
 int main(int argc, char* argv[])
 {
@@ -13,9 +12,11 @@ int main(int argc, char* argv[])
     /* Dump the string, just as a sanity check */
     std::cout << "====================" << std::endl;
     std::cout << "JSON Output:" << std::endl << json << std::endl;
+    std::cout << "JSON Output End." << std::endl;
     std::cout << "====================" << std::endl;
 
-    std::shared_ptr<TDRMesh> mesh = TDRMesh::Load2(json.c_str(), json.length());
+    std::shared_ptr<TDRMesh> mesh = TDRMesh::Load2(json.c_str(),
+        json.length());
 
     size_t count = mesh->getMeshCount();
     std::cout << "Found " << count << " meshes:" << std::endl;
