@@ -5,6 +5,7 @@
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_access.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -53,6 +54,10 @@ private:
 
     void dump_doubles(std::vector<float> arr);
     void dump_triplets(std::vector<float> arr);
+
+    /* used in game logic */
+    double last;
+    char direction;
 };
 
 int main(int argc, char* argv[])
@@ -71,9 +76,11 @@ int main(int argc, char* argv[])
         new DirectDrawTexture("textures/uvtemplate.dds"));
     std::shared_ptr<Model> model = Model::Create();
     model->addTexture(ddtex);
-    std::shared_ptr<Camera> camera = Camera::Create(model);
+    std::shared_ptr<Camera> camera = Camera::Create();
 
     glm::mat4 proj = glm::perspective(45.0f, 800.0f / 600.0f, 0.1f, 100.0f);
+
+    clock->start();
 
     bool running = true;
     while (running) {
@@ -85,8 +92,8 @@ int main(int argc, char* argv[])
         }
 
         double elapsed = clock->getTime();
-
         model->update(elapsed, camera->getView(), proj);
+
         window->clear();
         model->draw();
         window->swap();
@@ -169,6 +176,9 @@ std::shared_ptr<Model> Model::Create(void)
     model->m_pos = glm::vec3(0.0f, 0.0f, 0.0f);
     model->m_model = glm::translate(glm::mat4(1.0f), model->m_pos);
 
+    model->direction = 'u';
+    model->last = 0.0;
+
     return model;
 }
 
@@ -213,7 +223,8 @@ void Model::draw(void)
 
 glm::vec3 Model::getPosition(void)
 {
-    return glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec4 col = glm::column(m_model, 3);
+    return glm::vec3(col.x, col.y, col.z);
 }
 
 bool Model::setPosition(glm::vec3 position)
@@ -230,7 +241,28 @@ bool Model::translate(glm::vec3 offset)
 
 void Model::update(double elapsed, glm::mat4 view, glm::mat4 proj)
 {
+    glm::vec3 position = getPosition();
+    double delta = elapsed - last;
+    float change = static_cast<float>(delta) * 2.0f;
+
+    /* outrageous logic to ratchet back and forth on the Y axis. */
+    if (direction == 'u') {
+        position.y += change;
+    } else if (direction == 'd') {
+        position.y -= change;
+    }
+
+    if (position.y > 1.0f) {
+        position.y = 1.0f;
+        direction = 'd';
+    } else if (position.y < -1.0f) {
+        position.y = -1.0f;
+        direction = 'u';
+    }
+
+    this->setPosition(position);
     m_mvp = proj * view * m_model;
+    last = elapsed;
 }
 
 void Model::dump_triplets(std::vector<float> arr)
