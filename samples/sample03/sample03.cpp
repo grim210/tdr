@@ -74,6 +74,8 @@ int main(int argc, char* argv[])
 
     std::shared_ptr<Timer> clock = Timer::Create();
     std::shared_ptr<Model> model = Model::Create();
+    std::shared_ptr<DirectDrawTexture> ddtex(
+        new DirectDrawTexture("textures/uvtemplate.dds"));
     model->addTexture(ddtex);
     std::shared_ptr<Camera> camera = Camera::Create();
 
