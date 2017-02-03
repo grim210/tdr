@@ -6,4 +6,5 @@ add_library(tdrmain
     mainutil.cpp
     tdrmesh.cpp
     timer.cpp
+    tinyxml2.cpp
 )
