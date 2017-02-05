@@ -19,9 +19,11 @@ public:
     * MeshGenerator simply generate my cube in the constructor.
     void generate(MeshGenerator::Simple object);
     void interactive(void); */
-    std::string print(void);
+    void dump(void);
 private:
     std::unique_ptr<txml::XMLDocument> m_doc;
+    std::vector<std::vector<float>> m_bdata;
+    std::vector<std::string> m_bnames;
 };
 
 #endif
