@@ -6,7 +6,8 @@ enable_language(C)
 set(tdr_VERSION_MAJOR 0)
 set(tdr_VERSION_MINOR 0)
 set(tdr_VERSION_PATCH 2)
-set(tdr_VERSION_STRING "0.0.2")
+set(tdr_VERSION_STRING
+    "${tdr_VERSION_MAJOR}.${tdr_VERSION_MINOR}.${tdr_VERSION_PATCH}")
 
 option(BUILD_SYSTEM_DEBUG "Output debug info from CMake as it configure."
     FALSE)
