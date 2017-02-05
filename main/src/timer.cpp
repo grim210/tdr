@@ -48,7 +48,7 @@ double Timer::getTime(void)
     sec = now.tv_sec - m_start.tv_sec;
     nsec = now.tv_nsec - m_start.tv_nsec;
 
-    ret += sec;
+    ret += static_cast<double>(sec);
     ret += static_cast<double>(nsec) / static_cast<double>(1000000000.0);
 #endif
 
