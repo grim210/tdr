@@ -36,6 +36,7 @@ set(CMAKE_CXX_FLAGS_DEBUG
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
 find_package(OpenGL)
+
 find_package(PkgConfig)
 pkg_search_module(SDL2 REQUIRED sdl2)
 
@@ -56,8 +57,8 @@ endif()
 option(BUILD_TDRMAIN "Build libtdrmain library" ON)
 option(BUILD_TDRRENDERER "Build libtdrrenderer library" ON)
 option(BUILD_TESTS "Build test programs" ON)
-option(BUILD_SAMPLES "Build sample programs" OFF)
-option(BUILD_TOOLS "Build tools" OFF)
+option(BUILD_SAMPLES "Build sample programs" ON)
+option(BUILD_TOOLS "Build tools" ON)
 
 # There needs to be a way to determine if the dependencies are satisified
 # or not and then conditionally include that stuff.
@@ -65,18 +66,18 @@ if(BUILD_TDRMAIN)
     subdirs(main)
 endif()
 
-if(BUILD_TDRRENDERER)
+if(SDL2_FOUND AND BUILD_TDRMAIN AND BUILD_TDRRENDERER)
     subdirs(renderer)
 endif()
 
-if(BUILD_TESTS)
+if(SDL2_FOUND AND BUILD_TDRMAIN AND BUILD_TDRRENDERER AND BUILD_TESTS)
     subdirs(tests)
 endif()
 
-if(BUILD_SAMPLES)
+if(SDL2_FOUND AND BUILD_TDRMAIN AND BUILD_TDRRENDERER AND BUILD_SAMPLES)
     subdirs(samples)
 endif()
 
-if(BUILD_TOOLS)
+if(SDL2_FOUND AND BUILD_TDRMAIN AND BUILD_TDRRENDERER AND BUILD_TOOLS)
     subdirs(tools)
 endif()
