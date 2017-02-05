@@ -1,9 +1,8 @@
 <scene>
-  <mesh name="cube">
-    <shader type="vertex">vshader.vs</shader>
-    <shader type="fragment">fshader.fs</shader>
-    <texture type="DDS">uvtemplate.dds</texture>
-    <vertices count="108" per="3">cube.verts.bin</vertices>
-    <uvs count="72">cube.uvs.bin</uvs>
-  </mesh>
+    <mesh name="cube">
+        <vertices count="108" per="3">cube.verts.bin</vertices>
+        <colors count="108" per="3">cube.colors.bin</colors>
+        <shader type="vertex">vshader.vs</shader>
+        <shader type="fragment">fshader.fs</shader>
+    </mesh>
 </scene>

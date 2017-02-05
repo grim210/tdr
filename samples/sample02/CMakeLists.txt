@@ -11,3 +11,5 @@ add_executable(sample_02 sample02.cpp)
 target_link_libraries(sample_02 tdrmain tdrrenderer ${SDL2_LIBRARIES})
 
 file(COPY scene.xml DESTINATION .)
+file(COPY cube.colors.bin DESTINATION .)
+file(COPY cube.verts.bin DESTINATION .)
