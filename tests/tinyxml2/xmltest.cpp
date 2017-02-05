@@ -22,7 +22,7 @@
 	#include <sys/stat.h>	// mkdir
 #endif
 
-using namespace tinyxml2;
+using namespace txml;
 using namespace std;
 int gPass = 0;
 int gFail = 0;
@@ -1545,8 +1545,8 @@ int main( int argc, const char ** argv )
     
     {
         // If this doesn't assert in DEBUG, all is well.
-        tinyxml2::XMLDocument doc;
-        tinyxml2::XMLElement *pRoot = doc.NewElement("Root");
+        txml::XMLDocument doc;
+        txml::XMLElement *pRoot = doc.NewElement("Root");
         doc.DeleteNode(pRoot);
     }
 
