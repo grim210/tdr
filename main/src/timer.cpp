@@ -2,13 +2,6 @@
 
 std::shared_ptr<Timer> Timer::Create(void)
 {
-    if (SDL_InitSubSystem(SDL_INIT_TIMER)) {
-#ifdef TDR_DEBUG
-        std::cerr << "Failed to initialize timer subsystem." << std::endl;
-#endif
-        return nullptr;
-    }
-
     std::shared_ptr<Timer> ret(new Timer());
     if (!ret) {
 #ifdef TDR_DEBUG
@@ -17,14 +10,20 @@ std::shared_ptr<Timer> Timer::Create(void)
         return nullptr;
     }
 
-    ret->m_running = false;
-    ret->m_res = SDL_GetPerformanceFrequency();
+#ifdef _WIN32
+    QueryPerformanceCounter(&m_res);
+#else
+    clock_getres(CLOCK_MONOTONIC, &ret->m_res);
+#endif /* _WIN32 */
 
+    ret->m_running = false;
     return ret;
 }
 
 double Timer::getTime(void)
 {
+    double ret;
+
     if (!m_running) {
 #ifdef TDR_DEBUG
         std::cerr << "Timer::getTime(): timer isn't running.  Returning 0.";
@@ -33,12 +32,36 @@ double Timer::getTime(void)
         return 0.0;
     }
 
-    uint64_t diff = SDL_GetPerformanceCounter() - m_start;
-    return static_cast<double>(diff) / static_cast<double>(m_res);
+#ifdef _WIN32
+    LARGE_INTEGER now;
+    double elapsed;
+
+    QueryPerformanceCounter(&now);
+    elapsed = now.QuadPart - m_start.QuadPart;
+    ret = elapsed / static_cast<double>(1000000.0);
+#else
+    struct timespec now;
+    time_t sec;
+    long nsec;
+
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    sec = now.tv_sec - m_start.tv_sec;
+    nsec = now.tv_nsec - m_start.tv_nsec;
+
+    ret += sec;
+    ret += static_cast<double>(nsec) / static_cast<double>(1000000000.0);
+#endif
+
+    return ret;
 }
 
 void Timer::start(void)
 {
-    m_start = SDL_GetPerformanceCounter();
+#ifdef _WIN32
+    QueryPerformanceCounter(&m_start);
+#else
+    clock_gettime(CLOCK_MONOTONIC, &m_start);
+#endif
+
     m_running = true;
 }

@@ -2,12 +2,17 @@
 #define TDR_TIMER_H
 
 #ifdef TDR_DEBUG
-#include <iostream>
+  #include <iostream>
+#endif
+
+#ifdef _WIN32
+  #define WIN32_LEAN_AND_MEAN
+  #include <windows.h>
+#else
+  #include <time.h>
 #endif
 
 #include <memory>
-
-#include <SDL2/SDL.h>
 
 class Timer {
 public:
@@ -16,7 +21,11 @@ public:
     void start(void);
 private:
     bool m_running;
-    uint64_t m_start, m_res;
+#ifdef _WIN32
+    LARGE_INTEGER m_start, m_res;
+#else
+    struct timespec m_start, m_res;
+#endif
 };
 
 #endif /* TDR_TIMER_H */

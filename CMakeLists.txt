@@ -53,14 +53,21 @@ else()
     endif()
 endif()
 
+option(BUILD_TDRMAIN "Build libtdrmain library" ON)
+option(BUILD_TDRRENDERER "Build libtdrrenderer library" ON)
 option(BUILD_TESTS "Build test programs" ON)
 option(BUILD_SAMPLES "Build sample programs" OFF)
 option(BUILD_TOOLS "Build tools" OFF)
 
 # There needs to be a way to determine if the dependencies are satisified
 # or not and then conditionally include that stuff.
-subdirs(main)
-subdirs(renderer)
+if(BUILD_TDRMAIN)
+    subdirs(main)
+endif()
+
+if(BUILD_TDRRENDERER)
+    subdirs(renderer)
+endif()
 
 if(BUILD_TESTS)
     subdirs(tests)
