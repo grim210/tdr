@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <title>TDR - TDRMesh Specification</title>
+  </head>
+  <body>
+    <h1>TDRMesh Specification</h1>
+    <h2>Root Object</h2>
+    <p>Every TDRMesh JSON file is an object.  When you open the file, the 
+    first thing you should see is an opening curly brace.  Everything
+    contained within those two braces are part of the same TDRMesh object.</p>
+    <h2>Sub-Objects</h2>
+    <p>From the root object, you will have other objects identifed by strings.
+    As an example, you may see:
+<pre>
+{
+    "example_object": {
+        ...
+    },
+    ...,
+    ...,
+}
+</pre>
+    which would identify that sub-object by the name "example_object".
+    That mesh object can contain whatever data is relevant to that structure.
+    However, all data must be provided with a valid identifer.</p>
+    <ul>
+      <li>Textures: Paths of where to find textures, and what type of format
+        that the texture is stored as.</li>
+      <li>Shaders: Paths that point to where to find various shaders used for
+        rendering the object.</li>
+      <li>Primitives: Typically raw float data associated with vertex or
+        UV data, as an example.</li>
+    </ul>
+    <h3>Textures</h3>
+    <p>Not a texture, but a texture path where the engine knows to look for
+    the texture.  Each texture is an array that tells you the type of texture
+    and the path to the texture:</p>
+<pre>["DDS", "texture.dds"]</pre>
+    <p>Tells you that the path is "texture.dds", and the format is "DDS", which
+    is a DirectDrawSurface.  At this point, the supported texture formats
+    are:</p>
+    <ul>
+      <li>DirectDrawSurface (DDS)</li>
+    </ul>
+    <h3>Shaders</h3>
+    <p>Shaders, much like textures, aren't actually contained withint the
+    TDRMesh json file.  It's simply a path.  You specify the type and the path
+    and the TDRMesh loader will know what to do.</p>
+    <ul>
+      <li>Fragment Shaders: fshader</li>
+      <li>Geometry Shaders: gshader</li>
+      <li>Vertex Shaders: vshader</li>
+    </ul>
+    <p>As an example, this tells you that the shader you want to load is a
+    Vertex shader, and is called "some_shader.vs":</p>
+<pre>
+    vshader = 'some_shader.vs'
+</pre>
+    <h3>Primitives</h3>
+  </body>
+</html>
