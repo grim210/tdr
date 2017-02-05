@@ -55,4 +55,8 @@ endif()
 
 # There needs to be a way to determine if the dependencies are satisified
 # or not and then conditionally include that stuff.
-subdirs(main renderer samples tools)
+subdirs(main)
+subdirs(renderer)
+subdirs(tests)
+subdirs(samples)
+subdirs(tools)
