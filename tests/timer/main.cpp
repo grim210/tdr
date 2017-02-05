@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
     timer->start();
 
 #ifdef _WIN32
-    // do some win32 sleep call
+    SleepEx(1000, false);
 #else
     sleep(1);
 #endif
@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
     std::cout << "Slept for " << timer->getTime() << " seconds." << std::endl;
 
 #ifdef _WIN32
-    // more win32 sleeping
+    SleepEx(3000, false);
 #else
     sleep(3);
 #endif

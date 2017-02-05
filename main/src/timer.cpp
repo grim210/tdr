@@ -11,7 +11,7 @@ std::shared_ptr<Timer> Timer::Create(void)
     }
 
 #ifdef _WIN32
-    QueryPerformanceCounter(&m_res);
+    QueryPerformanceFrequency(&ret->m_res);
 #else
     clock_getres(CLOCK_MONOTONIC, &ret->m_res);
 #endif /* _WIN32 */
@@ -38,7 +38,7 @@ double Timer::getTime(void)
 
     QueryPerformanceCounter(&now);
     elapsed = now.QuadPart - m_start.QuadPart;
-    ret = elapsed / static_cast<double>(1000000.0);
+    ret = elapsed / static_cast<double>(m_res.QuadPart);
 #else
     struct timespec now;
     time_t sec;
