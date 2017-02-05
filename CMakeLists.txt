@@ -53,10 +53,23 @@ else()
     endif()
 endif()
 
+option(BUILD_TESTS "Build test programs" ON)
+option(BUILD_SAMPLES "Build sample programs" OFF)
+option(BUILD_TOOLS "Build tools" OFF)
+
 # There needs to be a way to determine if the dependencies are satisified
 # or not and then conditionally include that stuff.
 subdirs(main)
 subdirs(renderer)
-subdirs(tests)
-subdirs(samples)
-subdirs(tools)
+
+if(BUILD_TESTS)
+    subdirs(tests)
+endif()
+
+if(BUILD_SAMPLES)
+    subdirs(samples)
+endif()
+
+if(BUILD_TOOLS)
+    subdirs(tools)
+endif()

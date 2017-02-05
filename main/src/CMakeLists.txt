@@ -4,6 +4,7 @@ add_library(tdrmain
     directdrawtexture.cpp
     jsmn.cpp
     mainutil.cpp
+    miniz.c
     tdrmesh.cpp
     timer.cpp
     tinyxml2.cpp
