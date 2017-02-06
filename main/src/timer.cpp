@@ -20,6 +20,19 @@ std::shared_ptr<Timer> Timer::Create(void)
     return ret;
 }
 
+double Timer::getResolution(void)
+{
+    double ret = 0.0;
+#ifdef _WIN32
+    /* do some math here. */
+#else
+    ret += static_cast<double>(m_res.tv_sec);
+    ret += static_cast<double>(m_res.tv_nsec) /
+        static_cast<double>(1000000000.0);
+#endif
+    return ret;
+}
+
 double Timer::getTime(void)
 {
     double ret;

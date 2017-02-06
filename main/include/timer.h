@@ -17,6 +17,7 @@
 class Timer {
 public:
     static std::shared_ptr<Timer> Create(void);
+    double getResolution(void);
     double getTime(void);
     void start(void);
 private:

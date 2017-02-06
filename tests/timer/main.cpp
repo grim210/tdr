@@ -3,9 +3,9 @@
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+  #include <windows.h>
 #else
-#include <unistd.h>
+  #include <unistd.h>
 #endif
 
 #include <tdrmain.h>
@@ -14,6 +14,9 @@ int main(int argc, char* argv[])
 {
     std::shared_ptr<Timer> timer = Timer::Create();
     timer->start();
+
+    std::cout << "Timer resolution: " << timer->getResolution();
+    std::cout << " seconds per tick." << std::endl;
 
 #ifdef _WIN32
     SleepEx(1000, false);
