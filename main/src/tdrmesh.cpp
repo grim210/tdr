@@ -93,29 +93,6 @@ std::shared_ptr<TDRMesh> TDRMesh::load(const char* data, size_t len)
 
     /* XXX: Check for other data types as well */
 
-#ifdef TDR_DEBUG
-    for (size_t i = 0; i < m.m_bindata.size(); i++) {
-        std::cout << "TDRMesh::load(const char*, size_t) Found ";
-        std::cout << m.m_bindata[i].m_data.size();
-        switch (m.m_bindata[i].type) {
-        case TDRMesh::DataType::VERTEX:
-            std::cout << " vertices." << std::endl;
-            break;
-        case TDRMesh::DataType::COLOR:
-            std::cout << " colors." << std::endl;
-            break;
-        case TDRMesh::DataType::INDEX:
-            std::cout << " indeces." << std::endl;
-            break;
-        case TDRMesh::DataType::UV:
-            std::cout << " UVs." << std::endl;
-            break;
-        default:
-            break;
-        }
-    }
-#endif
-
     obj = mesh->FirstChildElement("shaders");
     if (!obj) {
 #ifdef TDR_DEBUG
@@ -174,18 +151,38 @@ std::vector<TDRMesh::shaderdata_t> TDRMesh::load_shaders(txml::XMLElement* tag)
 
     element = tag->FirstChildElement();
     while (element != nullptr) {
-#ifdef TDR_DEBUG
-        std::cout << "Found shader!" << std::endl;
-#endif
+        std::memset(&tmp, 0, sizeof(struct shaderdata_t));
         tmp.type = element->Attribute("type");
-        std::fstream fp(element->GetText());
+
+        std::fstream fp(element->GetText(),
+            std::fstream::in | std::fstream::binary);
         if (!fp.is_open()) {
+#ifdef TDR_DEBUG
+            std::cout << "Failed to open file '" << element->GetText();
+            std::cout << std::endl;
+#endif
             break;
         }
 
-        std::stringstream buff;
-        buff << fp.rdbuf();
-        tmp.source = buff.str();
+        fp.seekg(0L, fp.end);
+        size_t len = fp.tellg();
+        fp.seekg(0L, fp.beg);
+
+        if (len == 0) {
+#ifdef TDR_DEBUG
+            std::cout << "Found invalid file while loading shader source. ";
+            std::cout << "Skipping..." << std::endl;
+#endif
+            element = element->NextSiblingElement();
+            continue;
+        }
+
+        buff = new char[len];
+        fp.read(buff, len);
+        tmp.source = std::string(buff);
+
+        delete[](buff);
+        fp.close();
 
         ret.push_back(tmp);
         element = element->NextSiblingElement();
@@ -216,22 +213,47 @@ std::vector<float> TDRMesh::load_floats(const char* data, size_t len)
 #ifdef TDR_DEBUG
 void TDRMesh::_dump(void)
 {
-    std::cout << "TDRMesh::_dump(void)  BEGIN XML DUMP *****" << std::endl;
-    m_doc->Print();
-    std::cout << "TDRMesh::_dump(void)    END XML DUMP *****" << std::endl;
-
-    std::cout << std::endl << "TDRMesh::_dump(void) Found ";
-    std::cout << m_mesh.size() << " mesh(es)." << std::endl;
+    std::cout << "TDRMesh::_dump(void) Found ";
+    std::cout << m_mesh.size() << " mesh(es):" << std::endl;
 
     for (size_t i = 0; i < m_mesh.size(); i++) {
-        std::cout << "TDRMesh::_dump(void)\tMesh [" << i;
+        std::cout << "TDRMesh::_dump(void) Mesh[" << i;
         std::cout << "] name: " << m_mesh[i].name;
         std::cout << std::endl;
         std::cout << "TDRMesh::_dump(void)\tFound ";
-        std::cout << m_mesh[i].m_bindata.size() << " sets of vertex data.";
+        std::cout << m_mesh[i].m_bindata.size() << " sets of vertex data:";
         std::cout << std::endl;
+        for (size_t j = 0; j < m_mesh[i].m_bindata.size(); j++) {
+            std::cout << "TDRMesh::_dump(void)\t\tBuffer[" << j << "] ";
+            std::cout << "type: ";
+            switch (m_mesh[i].m_bindata[j].type) {
+            case TDRMesh::DataType::COLOR:
+                std::cout << "color ";
+                break;
+            case TDRMesh::DataType::INDEX:
+                std::cout << "index ";
+                break;
+            case TDRMesh::DataType::VERTEX:
+                std::cout << "vertex ";
+                break;
+            case TDRMesh::DataType::UV:
+                std::cout << "UV ";
+                break;
+            default:
+                std::cout << "**UNKOWN** ";
+            }
+
+            std::cout << "\t-- " << m_mesh[i].m_bindata[j].m_data.size();
+            std::cout << " elements." << std::endl;
+        }
+
         std::cout << "TDRMesh::_dump(void)\tFound ";
-        std::cout << m_mesh[i].m_shaderdata.size() << " shaders." << std::endl;
+        std::cout << m_mesh[i].m_shaderdata.size() << " shaders:" << std::endl;
+        for (size_t j = 0; j < m_mesh[i].m_shaderdata.size(); j++) {
+            std::cout << "TDRMesh::_dump(void)\t\tShader[" << j << "] ";
+            std::cout << "type: " << m_mesh[i].m_shaderdata[j].type;
+            std::cout << std::endl;
+        }
     }
 }
 #endif

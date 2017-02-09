@@ -2,7 +2,9 @@
     <mesh name="cube">
         <vertices count="108" per="3">cube.verts.bin</vertices>
         <colors count="108" per="3">cube.colors.bin</colors>
-        <shader type="vertex">vshader.vs</shader>
-        <shader type="fragment">fshader.fs</shader>
+        <shaders>
+            <shader type="vertex">vshader.vs</shader>
+            <shader type="fragment">fshader.fs</shader>
+        </shaders>
     </mesh>
 </scene>

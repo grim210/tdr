@@ -82,6 +82,7 @@ MeshGenerator::MeshGenerator(void)
 {
     txml::XMLElement* scene;
     txml::XMLElement* mesh;
+    txml::XMLElement* shaders;
     txml::XMLElement* shader[2];
     txml::XMLElement* colors;
     txml::XMLElement* vertices;
@@ -113,6 +114,8 @@ MeshGenerator::MeshGenerator(void)
     colors->SetAttribute("per", 3);
     colors->InsertFirstChild(m_doc->NewText("cube.colors.bin"));
 
+    shaders = m_doc->NewElement("shaders");
+
     /* set up the shader elements */
     shader[0] = m_doc->NewElement("shader");
     shader[0]->SetAttribute("type", "vertex");
@@ -124,11 +127,13 @@ MeshGenerator::MeshGenerator(void)
 
     /* insert the tags into the mesh.  There is nothing nested
     * below the mesh tage as of now. */
+    shaders->InsertEndChild(shader[0]);
+    shaders->InsertEndChild(shader[1]);
+
     mesh->InsertEndChild(vertices);
     mesh->InsertEndChild(colors);
     mesh->InsertEndChild(colors);
-    mesh->InsertEndChild(shader[0]);
-    mesh->InsertEndChild(shader[1]);
+    mesh->InsertEndChild(shaders);
 
     /* insert the mesh into the scene, and the scene into the document. */
     scene->InsertEndChild(mesh);

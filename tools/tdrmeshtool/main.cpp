@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
     std::unique_ptr<MeshGenerator> generator(new MeshGenerator());
 #ifdef TDR_DEBUG
     for (int i = 0; i < argc; i++) {
-        std::cout << argv[i] << std::endl;
+        std::cout << "Argument [" << i << "] :: " << argv[i] << std::endl;
     }
 #endif
 
