@@ -35,7 +35,7 @@ double Timer::getResolution(void)
 
 double Timer::getTime(void)
 {
-    double ret;
+    double ret = 0.0;
 
     if (!m_running) {
 #ifdef TDR_DEBUG

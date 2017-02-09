@@ -3,6 +3,7 @@
 
 int main(int argc, char* argv[])
 {
+    std::shared_ptr<TDRMesh> mesh;
     std::string path;
 
     if (argc == 1) {
@@ -11,11 +12,10 @@ int main(int argc, char* argv[])
         path = argv[1];
     }
 
-    txml::XMLDocument* doc = new txml::XMLDocument();
-    doc->LoadFile(path.c_str());
-    doc->Print();
-
-    delete(doc);
+    mesh = TDRMesh::Load(path);
+#ifdef TDR_DEBUG
+    mesh->_dump();
+#endif
 
     return 0;
 }
